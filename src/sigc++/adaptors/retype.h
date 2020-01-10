@@ -1,18 +1,11 @@
 // -*- c++ -*-
 /* Do not edit! -- generated file */
-#ifndef _SIGC_ADAPTORS_RETYPE_H_
-#define _SIGC_ADAPTORS_RETYPE_H_
+#ifndef _SIGC_ADAPTORS_MACROS_RETYPEHM4_
+#define _SIGC_ADAPTORS_MACROS_RETYPEHM4_
 #include <sigc++/adaptors/adaptor_trait.h>
 #include <sigc++/functors/ptr_fun.h>
 #include <sigc++/functors/mem_fun.h>
 #include <sigc++/functors/slot.h>
-
-//TODO: See comment in functor_trait.h.
-#if defined(nil) && defined(SIGC_PRAGMA_PUSH_POP_MACRO)
-  #define SIGC_NIL_HAS_BEEN_PUSHED 1
-  #pragma push_macro("nil")
-  #undef nil
-#endif
 
 namespace sigc {
 
@@ -77,19 +70,17 @@ struct retype_functor
 {
   typedef typename adapts<T_functor>::adaptor_type adaptor_type;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
   template <class T_arg1=void, class T_arg2=void, class T_arg3=void, class T_arg4=void, class T_arg5=void, class T_arg6=void, class T_arg7=void>
   struct deduce_result_type
-    { typedef typename adaptor_type::template deduce_result_type<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>::type type; };
-#endif
+    { typedef typename adaptor_type::template deduce_result_type<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>::type type; };
   typedef typename adapts<T_functor>::result_type result_type;
 
   result_type operator()();
-
+    
   template <class T_arg1>
   typename deduce_result_type<T_arg1>::type
   operator()(T_arg1 _A_a1)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_take_t<T_type1>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_type1>::take>
         (static_cast<T_type1>(_A_a1));
     }
 
@@ -97,7 +88,7 @@ struct retype_functor
   template <class T_arg1>
   typename deduce_result_type<T_arg1>::type
   sun_forte_workaround(T_arg1 _A_a1)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_take_t<T_type1>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_type1>::take>
         (static_cast<T_type1>(_A_a1));
     }
   #endif
@@ -105,7 +96,7 @@ struct retype_functor
   template <class T_arg1, class T_arg2>
   typename deduce_result_type<T_arg1, T_arg2>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_take_t<T_type1>, type_trait_take_t<T_type2>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_type1>::take, typename type_trait<T_type2>::take>
         (static_cast<T_type1>(_A_a1), static_cast<T_type2>(_A_a2));
     }
 
@@ -113,7 +104,7 @@ struct retype_functor
   template <class T_arg1, class T_arg2>
   typename deduce_result_type<T_arg1, T_arg2>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_take_t<T_type1>, type_trait_take_t<T_type2>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_type1>::take, typename type_trait<T_type2>::take>
         (static_cast<T_type1>(_A_a1), static_cast<T_type2>(_A_a2));
     }
   #endif
@@ -121,7 +112,7 @@ struct retype_functor
   template <class T_arg1, class T_arg2, class T_arg3>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_take_t<T_type1>, type_trait_take_t<T_type2>, type_trait_take_t<T_type3>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_type1>::take, typename type_trait<T_type2>::take, typename type_trait<T_type3>::take>
         (static_cast<T_type1>(_A_a1), static_cast<T_type2>(_A_a2), static_cast<T_type3>(_A_a3));
     }
 
@@ -129,7 +120,7 @@ struct retype_functor
   template <class T_arg1, class T_arg2, class T_arg3>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_take_t<T_type1>, type_trait_take_t<T_type2>, type_trait_take_t<T_type3>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_type1>::take, typename type_trait<T_type2>::take, typename type_trait<T_type3>::take>
         (static_cast<T_type1>(_A_a1), static_cast<T_type2>(_A_a2), static_cast<T_type3>(_A_a3));
     }
   #endif
@@ -137,7 +128,7 @@ struct retype_functor
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_take_t<T_type1>, type_trait_take_t<T_type2>, type_trait_take_t<T_type3>, type_trait_take_t<T_type4>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_type1>::take, typename type_trait<T_type2>::take, typename type_trait<T_type3>::take, typename type_trait<T_type4>::take>
         (static_cast<T_type1>(_A_a1), static_cast<T_type2>(_A_a2), static_cast<T_type3>(_A_a3), static_cast<T_type4>(_A_a4));
     }
 
@@ -145,7 +136,7 @@ struct retype_functor
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_take_t<T_type1>, type_trait_take_t<T_type2>, type_trait_take_t<T_type3>, type_trait_take_t<T_type4>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_type1>::take, typename type_trait<T_type2>::take, typename type_trait<T_type3>::take, typename type_trait<T_type4>::take>
         (static_cast<T_type1>(_A_a1), static_cast<T_type2>(_A_a2), static_cast<T_type3>(_A_a3), static_cast<T_type4>(_A_a4));
     }
   #endif
@@ -153,7 +144,7 @@ struct retype_functor
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_take_t<T_type1>, type_trait_take_t<T_type2>, type_trait_take_t<T_type3>, type_trait_take_t<T_type4>, type_trait_take_t<T_type5>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_type1>::take, typename type_trait<T_type2>::take, typename type_trait<T_type3>::take, typename type_trait<T_type4>::take, typename type_trait<T_type5>::take>
         (static_cast<T_type1>(_A_a1), static_cast<T_type2>(_A_a2), static_cast<T_type3>(_A_a3), static_cast<T_type4>(_A_a4), static_cast<T_type5>(_A_a5));
     }
 
@@ -161,7 +152,7 @@ struct retype_functor
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_take_t<T_type1>, type_trait_take_t<T_type2>, type_trait_take_t<T_type3>, type_trait_take_t<T_type4>, type_trait_take_t<T_type5>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_type1>::take, typename type_trait<T_type2>::take, typename type_trait<T_type3>::take, typename type_trait<T_type4>::take, typename type_trait<T_type5>::take>
         (static_cast<T_type1>(_A_a1), static_cast<T_type2>(_A_a2), static_cast<T_type3>(_A_a3), static_cast<T_type4>(_A_a4), static_cast<T_type5>(_A_a5));
     }
   #endif
@@ -169,7 +160,7 @@ struct retype_functor
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_take_t<T_type1>, type_trait_take_t<T_type2>, type_trait_take_t<T_type3>, type_trait_take_t<T_type4>, type_trait_take_t<T_type5>, type_trait_take_t<T_type6>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_type1>::take, typename type_trait<T_type2>::take, typename type_trait<T_type3>::take, typename type_trait<T_type4>::take, typename type_trait<T_type5>::take, typename type_trait<T_type6>::take>
         (static_cast<T_type1>(_A_a1), static_cast<T_type2>(_A_a2), static_cast<T_type3>(_A_a3), static_cast<T_type4>(_A_a4), static_cast<T_type5>(_A_a5), static_cast<T_type6>(_A_a6));
     }
 
@@ -177,7 +168,7 @@ struct retype_functor
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_take_t<T_type1>, type_trait_take_t<T_type2>, type_trait_take_t<T_type3>, type_trait_take_t<T_type4>, type_trait_take_t<T_type5>, type_trait_take_t<T_type6>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_type1>::take, typename type_trait<T_type2>::take, typename type_trait<T_type3>::take, typename type_trait<T_type4>::take, typename type_trait<T_type5>::take, typename type_trait<T_type6>::take>
         (static_cast<T_type1>(_A_a1), static_cast<T_type2>(_A_a2), static_cast<T_type3>(_A_a3), static_cast<T_type4>(_A_a4), static_cast<T_type5>(_A_a5), static_cast<T_type6>(_A_a6));
     }
   #endif
@@ -185,7 +176,7 @@ struct retype_functor
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7 _A_a7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_take_t<T_type1>, type_trait_take_t<T_type2>, type_trait_take_t<T_type3>, type_trait_take_t<T_type4>, type_trait_take_t<T_type5>, type_trait_take_t<T_type6>, type_trait_take_t<T_type7>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_type1>::take, typename type_trait<T_type2>::take, typename type_trait<T_type3>::take, typename type_trait<T_type4>::take, typename type_trait<T_type5>::take, typename type_trait<T_type6>::take, typename type_trait<T_type7>::take>
         (static_cast<T_type1>(_A_a1), static_cast<T_type2>(_A_a2), static_cast<T_type3>(_A_a3), static_cast<T_type4>(_A_a4), static_cast<T_type5>(_A_a5), static_cast<T_type6>(_A_a6), static_cast<T_type7>(_A_a7));
     }
 
@@ -193,7 +184,7 @@ struct retype_functor
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7 _A_a7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_take_t<T_type1>, type_trait_take_t<T_type2>, type_trait_take_t<T_type3>, type_trait_take_t<T_type4>, type_trait_take_t<T_type5>, type_trait_take_t<T_type6>, type_trait_take_t<T_type7>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_type1>::take, typename type_trait<T_type2>::take, typename type_trait<T_type3>::take, typename type_trait<T_type4>::take, typename type_trait<T_type5>::take, typename type_trait<T_type6>::take, typename type_trait<T_type7>::take>
         (static_cast<T_type1>(_A_a1), static_cast<T_type2>(_A_a2), static_cast<T_type3>(_A_a3), static_cast<T_type4>(_A_a4), static_cast<T_type5>(_A_a5), static_cast<T_type6>(_A_a6), static_cast<T_type7>(_A_a7));
     }
   #endif
@@ -202,7 +193,7 @@ struct retype_functor
   /** Constructs a retype_functor object that performs C-style casts on the parameters passed on to the functor.
    * @param _A_functor Functor to invoke from operator()().
    */
-  explicit retype_functor(type_trait_take_t<T_functor> _A_functor)
+  explicit retype_functor(typename type_trait<T_functor>::take _A_functor)
     : adapts<T_functor>(_A_functor)
     {}
 };
@@ -212,25 +203,21 @@ typename retype_functor<T_functor, T_type1, T_type2, T_type3, T_type4, T_type5, 
 retype_functor<T_functor, T_type1, T_type2, T_type3, T_type4, T_type5, T_type6, T_type7>::operator()()
   { return this->functor_(); }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+  
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::retype_functor performs a functor on the
  * functor stored in the sigc::retype_functor object.
  *
  * @ingroup retype
  */
-template <class T_functor, class T_type1, class T_type2, class T_type3, class T_type4, class T_type5, class T_type6, class T_type7>
-struct visitor<retype_functor<T_functor, T_type1, T_type2, T_type3, T_type4, T_type5, T_type6, T_type7> >
+template <class T_action, class T_functor, class T_type1, class T_type2, class T_type3, class T_type4, class T_type5, class T_type6, class T_type7>
+void visit_each(const T_action& _A_action,
+                const retype_functor<T_functor, T_type1, T_type2, T_type3, T_type4, T_type5, T_type6, T_type7>& _A_target)
 {
-  template <typename T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const retype_functor<T_functor, T_type1, T_type2, T_type3, T_type4, T_type5, T_type6, T_type7>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.functor_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  visit_each(_A_action, _A_target.functor_);
+}
+
 
 /** Creates an adaptor of type sigc::retype_functor which performs C-style casts on the parameters passed on to the functor.
  * This function template specialization works on sigc::slot.
@@ -1258,9 +1245,4 @@ retype(const bound_const_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, 
 
 
 } /* namespace sigc */
-
-#ifdef SIGC_NIL_HAS_BEEN_PUSHED
-  #undef SIGC_NIL_HAS_BEEN_PUSHED
-  #pragma pop_macro("nil")
-#endif
-#endif /* _SIGC_ADAPTORS_RETYPE_H_ */
+#endif /* _SIGC_ADAPTORS_MACROS_RETYPEHM4_ */

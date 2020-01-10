@@ -1,122 +1,55 @@
+// -*- c++ -*-
 /* Copyright 2002, The libsigc++ Development Team
  *  Assigned to public domain.  Use as you wish without restriction.
  */
 
-#include "testutilities.h"
 #include <sigc++/functors/slot.h>
-#include <sstream>
+#include <iostream>
 #include <string>
-#include <cstdlib>
 
 //The Tru64 compiler seems to need this to avoid an unresolved symbol
 //See bug #161503
 #include <new>
+SIGC_USING_STD(new)
 
-namespace
-{
-
-TestUtilities* util = nullptr;
-std::ostringstream result_stream;
+SIGC_USING_STD(cout)
+SIGC_USING_STD(endl)
+SIGC_USING_STD(string)
 
 class foo
 {
-public:
-  void operator()(int i)
-  {
-    result_stream << "foo(int " << i << ")";
-  }
-
-  void operator()(std::string& str)
-  {
-    result_stream << "foo(string '" << str << "') ";
-    str="foo was here";
-  }
-
-  void operator()(int, int)
-  {
-    result_stream << "foo(int, int)";
-  }
+  public:
+  void operator()(int i)            {std::cout << "foo(int "<<i<<")" << std::endl;}
+  void operator()(std::string& str) {std::cout << "foo(string '"<<str<<"')" << std::endl; str="foo was here";}
+  void operator()(int,int)          {std::cout << "foo(int,int)" << std::endl;}
 };
 
-void test_simple()
+int main()
 {
   // simple test
   sigc::slot<void,int> s1 = foo();
   s1(1);
-  util->check_result(result_stream, "foo(int 1)");
-
   s1 = foo();
   s1(2);
-  util->check_result(result_stream, "foo(int 2)");
-}
 
-void test_std_function_style_syntax()
-{
-  // simple test
-  sigc::slot<void(int)> s1 = foo();
-  s1(1);
-  util->check_result(result_stream, "foo(int 1)");
-
-  s1 = foo();
-  s1(2);
-  util->check_result(result_stream, "foo(int 2)");
-}
-
-void test_implicit_conversion()
-{
   // test implicit conversion
   sigc::slot<void,char> s2 = foo();
   s2(3);
-  util->check_result(result_stream, "foo(int 3)");
-}
 
-void test_reference()
-{
   // test reference
   sigc::slot<void,std::string&> sl1 = foo();
   std::string str("guest book");
   sl1(str);
-  result_stream << str;
-  util->check_result(result_stream, "foo(string 'guest book') foo was here");
-}
+  std::cout << str << std::endl;
 
-void test_operator_equals()
-{
   // test operator=
-  std::string str = "guest book";
-  sigc::slot<void,std::string&> sl1 = foo();
+  str = "guest book";
   sigc::slot<void,std::string&> sl2;
   sl2 = sl1;
   sl1 = sl2;
   sl1(str);
-  result_stream << str;
-  util->check_result(result_stream, "foo(string 'guest book') foo was here");
-}
+  std::cout << str << std::endl;
 
-void test_copy_ctor()
-{
   // test copy ctor
-  sigc::slot<void,int> s1 = foo();
   sigc::slot<void,int> s1_clone(s1);
-  s1_clone(4);
-  util->check_result(result_stream, "foo(int 4)");
-}
-
-} // end anonymous namespace
-
-int main(int argc, char* argv[])
-{
-  util = TestUtilities::get_instance();
-
-  if (!util->check_command_args(argc, argv))
-    return util->get_result_and_delete_instance() ? EXIT_SUCCESS : EXIT_FAILURE;
-
-  test_simple();
-  test_std_function_style_syntax();
-  test_implicit_conversion();
-  test_reference();
-  test_operator_equals();
-  test_copy_ctor();
-
-  return util->get_result_and_delete_instance() ? EXIT_SUCCESS : EXIT_FAILURE;
 }

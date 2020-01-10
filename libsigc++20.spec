@@ -2,17 +2,16 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           libsigc++20
-Version:        2.10.0
-Release:        1%{?dist}
+Version:        2.3.1
+Release:        2%{?dist}
 Summary:        Typesafe signal framework for C++
 
+Group:          System Environment/Libraries
 License:        LGPLv2+
 URL:            http://libsigc.sourceforge.net/
-Source0:        http://download.gnome.org/sources/libsigc++/%{release_version}/libsigc++-%{version}.tar.xz
+Source0:        http://ftp.gnome.org/pub/GNOME/sources/libsigc++/%{release_version}/libsigc++-%{version}.tar.xz
 
 BuildRequires:  m4
-BuildRequires:  perl
-BuildRequires:  perl(Getopt::Long)
 
 %description
 This library implements a full callback system for use in widget libraries,
@@ -29,7 +28,8 @@ starting with version 1.1.2, uses libsigc++20.
 
 %package devel
 Summary:        Development tools for the typesafe signal framework for C++
-Requires:       %{name}%{?_isa} = %{version}-%{release}
+Group:          Development/Libraries
+Requires:       %{name} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains the static libraries and header files
@@ -38,6 +38,7 @@ needed for development with %{name}.
 
 %package        doc
 Summary:        Documentation for %{name}, includes full API docs
+Group:          Documentation
 BuildArch:      noarch
 Requires:       %{name} = %{version}-%{release}
 
@@ -50,12 +51,12 @@ This package contains the full API documentation for %{name}.
 
 
 %build
-%configure
+%configure %{!?_with_static: --disable-static}
 make %{?_smp_mflags}
 
 
 %install
-%make_install
+make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 
 
@@ -65,14 +66,14 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 
 
 %files
-%license COPYING
-%doc AUTHORS README NEWS
+%doc AUTHORS COPYING README NEWS ChangeLog TODO
 %{_libdir}/*.so.*
 
 %files devel
 %{_includedir}/*
 %{_libdir}/sigc++-2.0/
 %{_libdir}/pkgconfig/*.pc
+%{?_with_static: %{_libdir}/*.a}
 %{_libdir}/*.so
 
 %files doc
@@ -83,16 +84,6 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 
 
 %changelog
-* Tue Sep 20 2016 Kalev Lember <klember@redhat.com> - 2.10.0-1
-- Update to 2.10.0
-- Resolves: #1425369
-
-* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 2.3.1-4
-- Mass rebuild 2014-01-24
-
-* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 2.3.1-3
-- Mass rebuild 2013-12-27
-
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

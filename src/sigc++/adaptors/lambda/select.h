@@ -4,11 +4,8 @@
 #define _SIGC_LAMBDA_SELECT_HPP_
 #include <sigc++/adaptors/lambda/base.h>
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
-
 namespace sigc {
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 namespace internal {
 struct lambda_select1 : public lambda_base
 {
@@ -332,11 +329,18 @@ struct lambda_select7 : public lambda_base
   
 };
 
+
 } /* namespace internal */
 
-#endif // DOXYGEN_SHOULD_SKIP_THIS
-} /* namespace sigc */
+extern SIGC_API const lambda<internal::lambda_select1> _1;
+extern SIGC_API const lambda<internal::lambda_select2> _2;
+extern SIGC_API const lambda<internal::lambda_select3> _3;
+extern SIGC_API const lambda<internal::lambda_select4> _4;
+extern SIGC_API const lambda<internal::lambda_select5> _5;
+extern SIGC_API const lambda<internal::lambda_select6> _6;
+extern SIGC_API const lambda<internal::lambda_select7> _7;
 
-#endif // SIGCXX_DISABLE_DEPRECATED
+
+} /* namespace sigc */
 
 #endif /* _SIGC_LAMBDA_SELECT_HPP_ */

@@ -1,11 +1,7 @@
-#include "testutilities.h"
 #include <sigc++/sigc++.h>
-#include <sstream>
-#include <cstdlib>
 
 namespace
 {
-std::ostringstream result_stream;
 
 class Base
   : virtual public sigc::trackable
@@ -25,41 +21,20 @@ class Derived
 {
 public:
   void method()
-  {
-    result_stream << "method()";
-  }
+  {}
 };
 
-} // end anonymous namespace
+} // anonymous namespace
 
-int main(int argc, char* argv[])
+int main(int, char**)
 {
-  auto util = TestUtilities::get_instance();
-
-  if (!util->check_command_args(argc, argv))
-    return util->get_result_and_delete_instance() ? EXIT_SUCCESS : EXIT_FAILURE;
-
-  auto instance = new Derived();
-  sigc::slot<void> handler = sigc::mem_fun(*instance, &Derived::method);
-  handler();
-  util->check_result(result_stream, "method()");
-
-  auto param =
-    sigc::bind(sigc::slot<void, Derived&>(), std::ref(*instance));
-  param();
-  util->check_result(result_stream, "");
-
-  auto ret =
-    sigc::bind_return(sigc::slot<void>(), std::ref(*instance));
-  ret();
-  util->check_result(result_stream, "");
-
+  Derived *instance = new Derived();
+  sigc::slot<void> handler = sigc::mem_fun(instance, &Derived::method);
+  sigc::slot<void> param =
+    sigc::bind(sigc::slot<void, Derived &>(), sigc::ref(*instance));
+  sigc::slot<Derived> ret =
+    sigc::bind_return(sigc::slot<void>(), sigc::ref(*instance));
   delete instance;
 
-  handler();
-  param();
-  ret();
-  util->check_result(result_stream, "");
-
-  return util->get_result_and_delete_instance() ? EXIT_SUCCESS : EXIT_FAILURE;
+  return 0;
 }

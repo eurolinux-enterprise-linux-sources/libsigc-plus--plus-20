@@ -1,8 +1,8 @@
 // -*- c++ -*-
 /* Do not edit! -- generated file */
 
-#ifndef _SIGC_FUNCTORS_PTR_FUN_H_
-#define _SIGC_FUNCTORS_PTR_FUN_H_
+#ifndef _SIGC_FUNCTORS_MACROS_PTR_FUNHM4_
+#define _SIGC_FUNCTORS_MACROS_PTR_FUNHM4_
 #include <sigc++/type_traits.h>
 #include <sigc++/functors/functor_trait.h>
 
@@ -107,7 +107,7 @@ public:
    * @param _A_a1 Argument to be passed on to the function.
    * @return The return value of the function invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1) const 
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1) const 
     { return func_ptr_(_A_a1); }
 };
 
@@ -143,7 +143,7 @@ public:
    * @param _A_a2 Argument to be passed on to the function.
    * @return The return value of the function invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2) const 
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2) const 
     { return func_ptr_(_A_a1, _A_a2); }
 };
 
@@ -181,7 +181,7 @@ public:
    * @param _A_a3 Argument to be passed on to the function.
    * @return The return value of the function invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3) const 
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3) const 
     { return func_ptr_(_A_a1, _A_a2, _A_a3); }
 };
 
@@ -221,7 +221,7 @@ public:
    * @param _A_a4 Argument to be passed on to the function.
    * @return The return value of the function invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4) const 
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4) const 
     { return func_ptr_(_A_a1, _A_a2, _A_a3, _A_a4); }
 };
 
@@ -263,7 +263,7 @@ public:
    * @param _A_a5 Argument to be passed on to the function.
    * @return The return value of the function invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5) const 
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5) const 
     { return func_ptr_(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
 };
 
@@ -307,7 +307,7 @@ public:
    * @param _A_a6 Argument to be passed on to the function.
    * @return The return value of the function invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6) const 
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6) const 
     { return func_ptr_(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
 };
 
@@ -353,7 +353,7 @@ public:
    * @param _A_a7 Argument to be passed on to the function.
    * @return The return value of the function invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6, type_trait_take_t<T_arg7> _A_a7) const 
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6, typename type_trait<T_arg7>::take _A_a7) const 
     { return func_ptr_(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
 };
 
@@ -539,4 +539,4 @@ ptr_fun(T_return (*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_ar
 
 
 } /* namespace sigc */
-#endif /* _SIGC_FUNCTORS_PTR_FUN_H_ */
+#endif /* _SIGC_FUNCTORS_MACROS_PTR_FUNHM4_ */

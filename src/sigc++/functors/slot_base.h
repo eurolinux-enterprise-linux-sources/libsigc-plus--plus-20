@@ -34,10 +34,9 @@ typedef void* (*hook)(void*);
  * Derivations of this class can be considered as a link
  * between a slot and the functor that the slot should
  * execute in operator(). This link is needed because in
- * libsigc++ the slot doesn't necessarily have exactly the
- * same function signature as the functor, thus allowing for
+ * libsigc++2 the slot doesn't necessarily have exactly the
+ * same function signature as the functor thus allowing for
  * implicit conversions.
- *
  * The base class slot_rep serves the purpose to
  * - form a common pointer type (slot_rep*),
  * - offer the possibility to create duplicates (dup()),
@@ -48,18 +47,11 @@ typedef void* (*hook)(void*);
  *      (set_parent()) that is executed from notify(),
  *   -# a generic function pointer, call_, that is simply
  *      set to zero in notify() to invalidate the slot.
- *
  * slot_rep inherits trackable so that connection objects can
  * refer to the slot and are notified when the slot is destroyed.
  */
 struct SIGC_API slot_rep : public trackable
 {
-  slot_rep(const slot_rep& src) = delete;
-  slot_rep& operator=(const slot_rep& src) = delete;
-
-  slot_rep(slot_rep&& src) = delete;
-  slot_rep& operator=(slot_rep&& src) = delete;
-
   /* NB: Instead of slot_rep we could inherit slot_base from trackable.
    * However, a simple benchmark seems to indicate that this slows
    * down dereferencing of slot list iterators. Martin. */
@@ -88,8 +80,8 @@ struct SIGC_API slot_rep : public trackable
   /** Parent object whose callback cleanup_ is executed on notification. */
   void* parent_;
 
-  inline slot_rep(hook call__, hook destroy__, hook dup__) noexcept
-    : call_(call__), destroy_(destroy__), dup_(dup__), cleanup_(nullptr), parent_(nullptr) {}
+  inline slot_rep(hook call__, hook destroy__, hook dup__)
+    : call_(call__), destroy_(destroy__), dup_(dup__), cleanup_(0), parent_(0) {}
 
   inline ~slot_rep()
     { destroy(); }
@@ -116,7 +108,7 @@ struct SIGC_API slot_rep : public trackable
    * @param parent The new parent.
    * @param cleanup The callback to execute from notify().
    */
-  inline void set_parent(void* parent, hook cleanup) noexcept
+  inline void set_parent(void* parent, hook cleanup)
     {
       parent_ = parent;
       cleanup_ = cleanup;
@@ -147,7 +139,7 @@ struct SIGC_API slot_do_bind
   /** Construct a slot_do_bind functor.
    * @param rep The slot_rep object trackables should notify on destruction.
    */
-  inline slot_do_bind(slot_rep* rep) noexcept : rep_(rep) {}
+  inline slot_do_bind(slot_rep* rep) : rep_(rep) {}
 
   /** Adds a dependency to @p t.
    * @param t The trackable object to add a callback to.
@@ -165,7 +157,7 @@ struct SIGC_API slot_do_unbind
   /** Construct a slot_do_unbind functor.
    * @param rep The slot_rep object trackables don't need to notify on destruction any more.
    */
-  inline slot_do_unbind(slot_rep* rep) noexcept : rep_(rep) {}
+  inline slot_do_unbind(slot_rep* rep) : rep_(rep) {}
 
   /** Removes a dependency from @p t.
    * @param t The trackable object to remove the callback from.
@@ -179,20 +171,23 @@ struct SIGC_API slot_do_unbind
 
 /** @defgroup slot Slots
  * Slots are type-safe representations of callback methods and functions.
- * A slot can be constructed from any function object or function, regardless of
- * whether it is a global function, a member method, static, or virtual.
+ * A Slot can be constructed from any function, regardless of whether it is a global function,
+ * a member method, static, or virtual.
  *
- * @section slots-creating Creating Slots
+ * Use the sigc::mem_fun() and sigc::ptr_fun() template functions to get a sigc::slot, like so:
  *
- * Use the sigc::mem_fun() or sigc::ptr_fun() template functions to get a sigc::slot, like so:
  * @code
- * sigc::slot<void, int> sl = sigc::mem_fun(someobj, &SomeClass::somemethod);
+ * sigc::slot<void, int> sl = sigc::mem_fun(someobj,& SomeClass::somemethod);
  * @endcode
+ *
  * or
+ *
  * @code
  * sigc::slot<void, int> sl = sigc::ptr_fun(&somefunction);
  * @endcode
- * or, in gtkmm,
+ *
+ * or
+ *
  * @code
  * m_Button.signal_clicked().connect( sigc::mem_fun(*this, &MyWindow::on_button_clicked) );
  * @endcode
@@ -200,47 +195,6 @@ struct SIGC_API slot_do_unbind
  * The compiler will complain if SomeClass::somemethod, etc. have the wrong signature.
  *
  * You can also pass slots as method parameters where you might normally pass a function pointer.
- *
- * @section slots-auto-disconnect Member Methods and Automatic Disconnection
- *
- * See @ref mem_fun "sigc::mem_fun()" about deriving from sigc::trackable to prevent member
- * methods from being called after the instance has been destroyed.
- *
- * @section slots-auto auto
- *
- * sigc::mem_fun() and sigc::ptr_fun() return functors, but those functors are
- * not slots.
- * @code
- * sigc::slot<void, int> sl = sigc::mem_fun(someobj, &SomeClass::somemethod);
- * @endcode
- * is not equivalent to
- * @code
- * auto sl = sigc::mem_fun(someobj, &SomeClass::somemethod); // Not a slot!
- * @endcode
- *
- * If you don't explicitly use a sigc::slot then the slot could call a method
- * on an instance after it has been destroyed even if the method is in a class
- * that derives from sigc::trackable.
- *
- * @section slots-with-lambdas C++ Lambdas
- *
- * A C++11 lambda expression is a functor (function object). It is automatically
- * wrapped in a slot, if it is connected to a signal.
- * @code
- * auto on_response = [&someobj] (int response_id)
- *   {
- *     someobj.somemethod(response_id);
- *     somefunction(response_id);
- *   };
- * m_Dialog.signal_response().connect(on_response);
- * @endcode
- *
- * If you connect a C++11 lambda expression or a std::function<> instance to
- * a signal or assign it to a slot,
- * - With libsigc++ versions before 2.6, if the return type is not void,
-     you must use the #SIGC_FUNCTORS_DEDUCE_RESULT_TYPE_WITH_DECLTYPE macro,
- * - if your functor contains references to sigc::trackable derived objects,
- *   those objects will not be tracked, unless you also use sigc::track_obj().
  *
  * @ingroup sigcfunctors
  */
@@ -264,29 +218,19 @@ class SIGC_API slot_base : public functor_base
 {
   typedef internal::slot_rep rep_type;
 
-  // Move operations are not declared noexcept because
-  // 1. they may copy instead of move
-  // 2. when they don't copy, they call src.rep_->notify_callbacks(), which
-  //    may throw an exception.
 public:
   /// Constructs an empty slot.
-  slot_base() noexcept;
+  slot_base();
 
   /** Constructs a slot from an existing slot_rep object.
    * @param rep The slot_rep object this slot should contain.
    */
-  explicit slot_base(rep_type* rep) noexcept;
+  explicit slot_base(rep_type* rep);
 
   /** Constructs a slot, copying an existing one.
    * @param src The existing slot to copy.
    */
   slot_base(const slot_base& src);
-
-  /** Constructs a slot, moving an existing one.
-   * If @p src is connected to a parent (e.g. a signal), it is copied, not moved.
-   * @param src The existing slot to move or copy.
-   */
-  slot_base(slot_base&& src);
 
   ~slot_base();
 
@@ -297,7 +241,7 @@ public:
    *  do_something()
    * @endcode
    */
-  explicit operator bool() const noexcept;
+  operator bool() const;
 
   /** Sets the parent of this slot.
    * This function is used by signals to register a notification callback.
@@ -306,7 +250,7 @@ public:
    * @param parent The new parent.
    * @param cleanup The notification callback.
    */
-  void set_parent(void* parent, void* (*cleanup)(void*)) const noexcept;
+  void set_parent(void* parent, void* (*cleanup)(void*)) const;
 
   typedef trackable::func_destroy_notify func_destroy_notify;
   /** Add a callback that is executed (notified) when the slot is detroyed.
@@ -325,13 +269,13 @@ public:
   /** Returns whether the slot is invalid.
    * @return @p true if the slot is invalid (empty).
    */
-  inline bool empty() const noexcept
+  inline bool empty() const
     { return (!rep_ || !rep_->call_); }
 
   /** Returns whether the slot is blocked.
    * @return @p true if the slot is blocked.
    */
-  inline bool blocked() const noexcept
+  inline bool blocked() const
     { return blocked_; }
     
   /** Sets the blocking state.
@@ -342,12 +286,12 @@ public:
    * @param should_block Indicates whether the blocking state should be set or unset.
    * @return @p true if the slot was in blocking state before.
    */
-  bool block(bool should_block = true) noexcept;
+  bool block(bool should_block = true);
 
   /** Unsets the blocking state.
    * @return @p true if the slot was in blocking state before.
    */
-  bool unblock() noexcept;
+  bool unblock();
 
   /** Disconnects the slot.
    * Invalidates the slot and notifies the parent.
@@ -357,18 +301,11 @@ public:
 //The Tru64 and Solaris Forte 5.5 compilers needs this operator=() to be public. I'm not sure why, or why it needs to be protected usually. murrayc.
 //See bug #168265. 
 //protected:
-  /** Overrides this slot, making a copy from another slot.
+  /** Overrides this slot making a copy from another slot.
    * @param src The slot from which to make a copy.
    * @return @p this.
    */
   slot_base& operator=(const slot_base& src);
-
-  /** Overrides this slot, making a move from another slot.
-   * If @p src is connected to a parent (e.g. a signal), it is copied, not moved.
-   * @param src The slot from which to move or copy.
-   * @return @p this.
-   */
-  slot_base& operator=(slot_base&& src);
 
 public: // public to avoid template friend declarations
   /** Typed slot_rep object that contains a functor. */
@@ -376,9 +313,6 @@ public: // public to avoid template friend declarations
 
   /** Indicates whether the slot is blocked. */
   bool blocked_;
-
-private:
-  void delete_rep_with_check();
 };
 
 } //namespace sigc

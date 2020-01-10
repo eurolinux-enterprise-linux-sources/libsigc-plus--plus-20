@@ -15,7 +15,7 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
-AC_INIT([libsigc++], [2.10.0],
+AC_INIT([libsigc++], [2.3.1],
         [http://bugzilla.gnome.org/enter_bug.cgi?product=libsigc%2B%2B],
         [libsigc++], [http://libsigc.sourceforge.net/])
 AC_PREREQ([2.59])
@@ -26,19 +26,15 @@ AC_CONFIG_MACRO_DIR([build])
 AC_CONFIG_HEADERS([config.h sigc++config.h])
 
 AM_INIT_AUTOMAKE([1.9 -Wno-portability check-news dist-bzip2 no-define nostdinc tar-ustar])
-# Support silent build rules.
-# Disable by either passing --disable-silent-rules to configure or passing V=1 to make.
-m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
 AM_MAINTAINER_MODE
 AC_ARG_VAR([ACLOCAL_FLAGS], [aclocal flags, e.g. -I <macro dir>])
 
-MM_PREREQ([0.9.10])
+MM_PREREQ([0.7.2])
 MM_INIT_MODULE([sigc++-2.0])
 MM_CONFIG_DOCTOOL_DIR([docs])
 
 AC_PROG_CXX
-MM_AX_CXX_COMPILE_STDCXX([11], [noext], [mandatory])
-
 AC_DISABLE_STATIC
 LT_INIT([win32-dll])
 
@@ -54,35 +50,16 @@ MM_ARG_WITH_TAGFILE_DOC([libstdc++.tag], [mm-common-libstdc++])
 AC_LANG([C++])
 SIGC_CXX_GCC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
 SIGC_CXX_MSVC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
-SIGC_CXX_PRAGMA_PUSH_POP_MACRO
+SIGC_CXX_SELF_REFERENCE_IN_MEMBER_INITIALIZATION
+SIGC_CXX_HAS_NAMESPACE_STD
 SIGC_CXX_HAS_SUN_REVERSE_ITERATOR
 
 AS_IF([test "x$config_error" = xyes],
       [AC_MSG_FAILURE([[One or more of the required C++ compiler features is missing.]])])
 
-# Evaluate the --enable-warnings=level option.
 MM_ARG_ENABLE_WARNINGS([SIGC_WXXFLAGS],
                        [-Wall],
-                       [-pedantic -Wall -Wextra -Wsuggest-override -Wshadow -Wzero-as-null-pointer-constant -Wformat-security])
-
-# Offer the ability to omit some API from the library.
-MM_ARG_DISABLE_DEPRECATED_API([SIGCXX])
-
-AC_ARG_ENABLE(benchmark,
-  AS_HELP_STRING([--enable-benchmark=yes|no]),
-  [enable_benchmark=yes]
-)
-
-AM_CONDITIONAL([SIGC_BUILD_BENCHMARK], [test "x$enable_benchmark" = xyes])
-
-AS_IF([test "x$enable_benchmark" = xyes],[
-  #Use boost::timer for our benchmark, if it's available.
-  # See http://www.gnu.org/software/autoconf-archive/ax_boost_base.html
-  # Boost System is needed by Boost Timer
-  AX_BOOST_BASE
-  AX_BOOST_SYSTEM
-  AX_BOOST_TIMER
-])
+                       [-pedantic -Wall -Wextra])
 
 AC_CONFIG_FILES([Makefile
                  ${SIGCXX_MODULE_NAME}.pc:sigc++.pc.in
@@ -92,9 +69,15 @@ AC_CONFIG_FILES([Makefile
                  tests/Makefile
                  docs/Makefile
                  docs/reference/Doxyfile
-                 MSVC_Net2013/sigc.rc])
+                 MSVC_Net2005/sigc.rc
+                 MSVC_Net2008/sigc.rc
+                 MSVC_Net2010/sigc.rc])
 
 # Copy the generated configuration headers into the MSVC project directories.
-AC_CONFIG_COMMANDS([MSVC_Net2013/sigc++config.h],
-                   [cp -f sigc++config.h MSVC_Net2013/sigc++config.h])
+AC_CONFIG_COMMANDS([MSVC_Net2005/sigc++config.h],
+                   [cp -f sigc++config.h MSVC_Net2005/sigc++config.h])
+AC_CONFIG_COMMANDS([MSVC_Net2008/sigc++config.h],
+                   [cp -f sigc++config.h MSVC_Net2008/sigc++config.h])
+AC_CONFIG_COMMANDS([MSVC_Net2010/sigc++config.h],
+                   [cp -f sigc++config.h MSVC_Net2010/sigc++config.h])
 AC_OUTPUT

@@ -31,29 +31,27 @@ dnl
 define([CALL_SIZE],7)
 
 #Generate header guards:
-define([_FIREWALL],[dnl
-#ifndef _SIGC_$1_H_
-#define _SIGC_$1_H_[]dnl
+define([__FIREWALL__],[dnl
+define(__hfile_temp__,[translit(__file__,/., _)])dnl
+define(__hfile_temp2__,[translit(__hfile_temp__,+., _)])dnl
+define(__hfile__,[_SIGC_[]patsubst(translit(__hfile_temp2__,a-z.,A-Z_), _M4$)_])dnl
+#ifndef __hfile__
+#define __hfile__[]dnl
 divert(1)dnl
-#endif /* _SIGC_$1_H_ */
+#endif /* __hfile__ */
 divert(0)dnl
 ])
 
-define([_R_],[type_trait_take_t<$1>])
-define([_P_],[type_trait_pass_t<$1>])
+define([_R_],[typename type_trait<$1>::take])
+define([_P_],[typename type_trait<$1>::pass])
 
-define([__DEPRECATION_GUARD__],[SIGCXX_DISABLE_DEPRECATED])dnl
-dnl Start deprecation
-define([_DEPRECATE_IFDEF_START],[dnl
-#ifndef __DEPRECATION_GUARD__])dnl
-dnl End deprecation
-define([_DEPRECATE_IFDEF_END],[dnl
-#endif // __DEPRECATION_GUARD__])dnl
 
 dnl
 dnl General macros
 dnl
 
+define([UPPER],[translit([$*],[abcdefghijklmnopqrstuvwxyz],[ABCDEFGHIJKLMNOPQRSTUVWXYZ])])
+define([LOWER],[translit([$*],[ABCDEFGHIJKLMNOPQRSTUVWXYZ],[abcdefghijklmnopqrstuvwxyz])])
 define([PROT],[[$*]])
 
 define([_LOOP],

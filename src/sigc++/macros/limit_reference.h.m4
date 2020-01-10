@@ -1,18 +1,19 @@
-dnl Copyright 2002, The libsigc++ Development Team
 dnl
-dnl This library is free software; you can redistribute it and/or
-dnl modify it under the terms of the GNU Lesser General Public
-dnl License as published by the Free Software Foundation; either
-dnl version 2.1 of the License, or (at your option) any later version.
-dnl
-dnl This library is distributed in the hope that it will be useful,
-dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
-dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-dnl Lesser General Public License for more details.
-dnl
-dnl You should have received a copy of the GNU Lesser General Public
-dnl License along with this library; if not, write to the Free Software
-dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+dnl Copyright 2002, The libsigc++ Development Team 
+dnl 
+dnl This library is free software; you can redistribute it and/or 
+dnl modify it under the terms of the GNU Lesser General Public 
+dnl License as published by the Free Software Foundation; either 
+dnl version 2.1 of the License, or (at your option) any later version. 
+dnl 
+dnl This library is distributed in the hope that it will be useful, 
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of 
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+dnl Lesser General Public License for more details. 
+dnl 
+dnl You should have received a copy of the GNU Lesser General Public 
+dnl License along with this library; if not, write to the Free Software 
+dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA 
 dnl
 divert(-1)
 
@@ -34,14 +35,14 @@ define([LIMIT_REFERENCE],[dnl
  * If Foo does not inherit from sigc::trackable then invoke() and visit() just return the
  * derived reference.
  *
- * This is used for bound (sigc::bind) slot parameters (via bound_argument), bound return values,
+ * This is used for bound (sigc::bind) slot parameters (via bound_argument), bound return values, 
  * and, with mem_fun(), the reference to the handling object.
  *
  * - @e T_type The type of the reference.
  */
 template <class T_type,
           bool I_derives_trackable =
-            std::is_base_of<trackable, T_type>::value>
+            is_base_and_derived<trackable, T_type>::value>
 class [$1]limit_reference
 {
 public:
@@ -111,37 +112,34 @@ private:
   [$2]T_type& invoked;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-/** Implementation of visitor specialized for the [$1]limit_reference
+/** Implementation of visit_each() specialized for the [$1]limit_reference
  * class, to call visit_each() on the entity returned by the [$1]limit_reference's
  * visit() method.
- * @tparam T_type The type of the reference.
- * @tparam T_action The type of functor to invoke.
+ * - @e T_action The type of functor to invoke.
+ * - @e T_type The type of the reference.
  * @param _A_action The functor to invoke.
- * @param _A_target The visited instance.
+ * @param _A_argument The visited instance.
  */
-template <class T_type, bool I_derives_trackable>
-struct visitor<[$1]limit_reference<T_type, I_derives_trackable> >
+template <class T_action, class T_type, bool I_derives_trackable>
+void
+visit_each(const T_action& _A_action,
+           const [$1]limit_reference<T_type, I_derives_trackable>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const [$1]limit_reference<T_type, I_derives_trackable>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.visit());
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  visit_each(_A_action, _A_target.visit());
+}
 ])
 
 divert(0)
 
-_FIREWALL([LIMIT_REFERENCE])
+__FIREWALL__
 
-#include <sigc++/visit_each.h>
+
 #include <sigc++/type_traits.h>
 #include <sigc++/trackable.h>
 
+
 namespace sigc {
+
 
 LIMIT_REFERENCE([],[],[])dnl
 
@@ -154,5 +152,7 @@ LIMIT_REFERENCE([volatile_],[],[volatile ])dnl
 
 LIMIT_REFERENCE([const_volatile_],[const ],[const volatile ])dnl
 
+
 } /* namespace sigc */
+
 

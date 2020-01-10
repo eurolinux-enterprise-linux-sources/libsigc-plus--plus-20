@@ -3,34 +3,28 @@
  *  Assigned to public domain.  Use as you wish without restriction.
  */
 
-#include "testutilities.h"
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 #include <sigc++/functors/ptr_fun.h>
 #include <sigc++/functors/mem_fun.h>
-#include <sstream>
-#include <iomanip>
+#include <iostream>
 #include <vector>
-#include <cstdlib>
 
-namespace
-{
-
-TestUtilities* util = nullptr;
-std::ostringstream result_stream;
+SIGC_USING_STD(cout)
+SIGC_USING_STD(endl)
 
 struct arithmetic_mean_accumulator
 {
   typedef double result_type;
   template<typename T_iterator>
   double operator()(T_iterator first, T_iterator last) const
-  {
-    double value_ = 0;
-    int n_ = 0;
-    for (; first != last; ++first, ++n_)
-      value_ += *first;
-    return (n_ ? value_ / n_ : -1); // empty slot list <=> n_==0
-  }
+    {
+      double value_ = 0;
+      int n_ = 0;
+      for (; first != last; ++first, ++n_)
+        value_ += *first;
+      return (n_ ? value_ / n_ : -1); // empty slot list <=> n_==0
+    }
 };
 
 template<class Ret>
@@ -39,108 +33,55 @@ struct vector_accumulator
   typedef std::vector<Ret> result_type;
   template<typename T_iterator>
   result_type operator()(T_iterator first, T_iterator last) const
-  {
-    result_type vec;
-    for (; first != last; ++first)
-      vec.push_back(*first);
-    return vec;
-  }
+    {
+      result_type vec;
+      for (; first != last; ++first)
+        vec.push_back(*first);
+      return vec;
+    }
 };
 
-int foo(int i)
-{
-  const int result = 3 * i + 1;
-  result_stream << "foo: " << result << ", ";
-  return result;
-}
+int foo(int i)    { std::cout << "foo: " << 3*i+1 << std::endl; return 3*i+1;}
+int bar(double i) { std::cout << "bar: " << 5*int(i)-3 << std::endl; return 5*int(i)-3;}
 
-int bar(double i)
+struct A : public sigc::trackable 
 {
-  const int result = 5 * int(i) - 3;
-  result_stream << "bar: " << result << ", ";
-  return result;
-}
-
-struct A : public sigc::trackable
-{
-  int foo(int i)
-  {
-    const int result = 20 * i - 14;
-    result_stream << "A::foo: " << result << ", ";
-    return result;
-  }
+  int foo(int i) { std::cout << "A::foo: " << 20*i-14 << std::endl; return 20*i-14;}
 };
 
-void test_empty_signal()
+int main()
 {
-  sigc::signal<int,int>::accumulated<arithmetic_mean_accumulator> sig;
-  sigc::signal<int,int>::accumulated<vector_accumulator<int> > sig_vec;
+   sigc::signal<int,int>::accumulated<arithmetic_mean_accumulator> sig;
+   sigc::signal<int,int>::accumulated<vector_accumulator<int> > sig_vec;
 
-  result_stream << "Result (empty slot list): " << sig(0);
-  util->check_result(result_stream, "Result (empty slot list): -1");
-  result_stream << "Vector result (empty slot list): "
-                << (sig_vec(0).empty() ? "empty" : "not empty");
-  util->check_result(result_stream, "Vector result (empty slot list): empty");
-}
+   std::cout << "Result (empty slot list): " << sig(0) << std::endl;
+   std::cout << "Vector result (empty slot list): "
+             << (sig_vec(0).empty() ? "empty" : "not empty") << std::endl;
 
-void test_mean()
-{
-  sigc::signal<int,int>::accumulated<arithmetic_mean_accumulator> sig;
+   A a;
+   sig.connect(sigc::ptr_fun1(&foo));
+   sig.connect(sigc::mem_fun1(&a, &A::foo));
+   sig.connect(sigc::ptr_fun1(&bar));
+   
+   sig_vec.connect(sigc::ptr_fun1(&foo));
+   sig_vec.connect(sigc::mem_fun1(&a, &A::foo));
+   sig_vec.connect(sigc::ptr_fun1(&bar));
 
-  A a;
-  sig.connect(sigc::ptr_fun1(&foo));
-  sig.connect(sigc::mem_fun1(a, &A::foo));
-  sig.connect(sigc::ptr_fun1(&bar));
-
-  double dres = sig(1);
-  result_stream << "Mean accumulator: Result (i=1): "
-                << std::fixed << std::setprecision(3) << dres;
-  util->check_result(result_stream,
-    "foo: 4, A::foo: 6, bar: 2, Mean accumulator: Result (i=1): 4.000");
-
-  dres = sig(11);
-  result_stream << "Mean accumulator: Plain Result (i=11): "
-                << std::fixed << std::setprecision(3) << dres;
-  util->check_result(result_stream,
-    "foo: 34, A::foo: 206, bar: 52, Mean accumulator: Plain Result (i=11): 97.333");
-}
-
-void test_vector_accumulator()
-{
-  sigc::signal<int,int>::accumulated<vector_accumulator<int> > sig_vec;
-
-  A a;
-  sig_vec.connect(sigc::ptr_fun(&foo));
-  sig_vec.connect(sigc::mem_fun(a, &A::foo));
-  sig_vec.connect(sigc::ptr_fun(&bar));
-  
-  auto res1 = sig_vec(1);
-  result_stream << "Vector accumulator: Result (i=1): ";
-  for (auto num : res1)
-    result_stream << num << " ";
-  util->check_result(result_stream,
-    "foo: 4, A::foo: 6, bar: 2, Vector accumulator: Result (i=1): 4 6 2 ");
-
-  auto res3 = sig_vec(3);
-  result_stream << "Vector accumulator: Result (i=3): ";
-  for (auto num : res3)
-    result_stream << num << " ";
-  util->check_result(result_stream,
-    "foo: 10, A::foo: 46, bar: 12, Vector accumulator: Result (i=3): 10 46 12 ");
-}
-
-} // end anonymous namespace
-
-int main(int argc, char* argv[])
-{
-  util = TestUtilities::get_instance();
-
-  if (!util->check_command_args(argc, argv))
-    return util->get_result_and_delete_instance() ? EXIT_SUCCESS : EXIT_FAILURE;
-
-  test_empty_signal();
-  test_mean();
-  test_vector_accumulator();
-
-  return util->get_result_and_delete_instance() ? EXIT_SUCCESS : EXIT_FAILURE;
+   std::cout << "Mean accumulator: Result (i=1): " << sig(1) << std::endl;
+   std::cout << "Mean accumulator: Plain Result (i=11): " << sig(11) << std::endl;
+   
+   std::vector<int> res1 = sig_vec(1);
+   std::vector<int> res3 = sig_vec(3);
+   
+   std::cout << "Vector accumulator: Result (i=1): ";
+   for (std::vector<int>::iterator i = res1.begin(); i != res1.end(); ++i)
+     std::cout << *i << " ";
+   std::cout << std::endl;
+   
+   std::cout << "Vector accumulator: Result (i=3): ";
+   for (std::vector<int>::iterator i = res3.begin(); i != res3.end(); ++i)
+     std::cout << *i << " ";
+   std::cout << std::endl;
+   
+   return 0;
 }

@@ -2,12 +2,12 @@
 /* Do not edit! -- generated file */
 
 
-// implementation notes:
+// implementation notes:  
 //  - we do not use bind here, because it would introduce
 //    an extra copy and complicate the header include order if bind is
 //    to have automatic conversion for member pointers.
-#ifndef _SIGC_FUNCTORS_MEM_FUN_H_
-#define _SIGC_FUNCTORS_MEM_FUN_H_
+#ifndef _SIGC_FUNCTORS_MACROS_MEM_FUNHM4_
+#define _SIGC_FUNCTORS_MACROS_MEM_FUNHM4_
 #include <sigc++/type_traits.h>
 #include <sigc++/functors/functor_trait.h>
 #include <sigc++/limit_reference.h>
@@ -15,15 +15,11 @@
 namespace sigc {
 
 /** @defgroup mem_fun mem_fun()
- * mem_fun() Creates a functor from a pointer to a method.
+ * mem_fun() is used to convert a pointer to a method to a functor.
  *
  * Optionally, a reference or pointer to an object can be bound to the functor.
- *
- * @note If the object type inherits from sigc::trackable, and the
- * functor returned from mem_fun() is assigned to a sigc::slot, the functor
- * will be automatically cleared when the object goes out of scope. Invoking
- * that slot will then have no effect and will not try to use the destroyed
- * instance.
+ * Note that only if the object type inherits from sigc::trackable is
+ * the slot automatically cleared when the object goes out of scope!
  *
  * If the member function pointer is to an overloaded type, you must specify
  * the types using template arguments starting with the first argument.
@@ -37,8 +33,6 @@ namespace sigc {
  * };
  * foo my_foo;
  * sigc::slot<void, int> sl = sigc::mem_fun(my_foo, &foo::bar);
- * // Note: f is not a slot. It will not be invalidated when my_foo is deleted.
- * auto f = sigc::mem_fun(my_foo, &foo::bar); // Usually not what you want.
  * @endcode
  *
  * For const methods mem_fun() takes a const reference or pointer to an object.
@@ -87,25 +81,19 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  mem_functor0() : func_ptr_(nullptr) {}
+  mem_functor0() : func_ptr_(0) {}
 
   /** Constructs a mem_functor0 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit mem_functor0(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @return The return value of the method invocation.
    */
   T_return operator()(T_obj* _A_obj) const
     { return (_A_obj->*(this->func_ptr_))(); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -136,33 +124,27 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  mem_functor1() : func_ptr_(nullptr) {}
+  mem_functor1() : func_ptr_(0) {}
 
   /** Constructs a mem_functor1 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit mem_functor1(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1) const
+  T_return operator()(T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1) const
+  T_return operator()(T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1) const
     { return (_A_obj.*func_ptr_)(_A_a1); }
 
 protected:
@@ -188,27 +170,21 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  mem_functor2() : func_ptr_(nullptr) {}
+  mem_functor2() : func_ptr_(0) {}
 
   /** Constructs a mem_functor2 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit mem_functor2(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2) const
+  T_return operator()(T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -216,7 +192,7 @@ public:
    * @param _A_a2 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2) const
+  T_return operator()(T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2); }
 
 protected:
@@ -243,28 +219,22 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  mem_functor3() : func_ptr_(nullptr) {}
+  mem_functor3() : func_ptr_(0) {}
 
   /** Constructs a mem_functor3 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit mem_functor3(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
    * @param _A_a3 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3) const
+  T_return operator()(T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -273,7 +243,7 @@ public:
    * @param _A_a3 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3) const
+  T_return operator()(T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3); }
 
 protected:
@@ -301,19 +271,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  mem_functor4() : func_ptr_(nullptr) {}
+  mem_functor4() : func_ptr_(0) {}
 
   /** Constructs a mem_functor4 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit mem_functor4(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -321,9 +286,8 @@ public:
    * @param _A_a4 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4) const
+  T_return operator()(T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -333,7 +297,7 @@ public:
    * @param _A_a4 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4) const
+  T_return operator()(T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4); }
 
 protected:
@@ -362,19 +326,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  mem_functor5() : func_ptr_(nullptr) {}
+  mem_functor5() : func_ptr_(0) {}
 
   /** Constructs a mem_functor5 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit mem_functor5(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -383,9 +342,8 @@ public:
    * @param _A_a5 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5) const
+  T_return operator()(T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -396,7 +354,7 @@ public:
    * @param _A_a5 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5) const
+  T_return operator()(T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
 
 protected:
@@ -426,19 +384,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  mem_functor6() : func_ptr_(nullptr) {}
+  mem_functor6() : func_ptr_(0) {}
 
   /** Constructs a mem_functor6 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit mem_functor6(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -448,9 +401,8 @@ public:
    * @param _A_a6 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6) const
+  T_return operator()(T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -462,7 +414,7 @@ public:
    * @param _A_a6 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6) const
+  T_return operator()(T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
 
 protected:
@@ -493,19 +445,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  mem_functor7() : func_ptr_(nullptr) {}
+  mem_functor7() : func_ptr_(0) {}
 
   /** Constructs a mem_functor7 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit mem_functor7(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -516,9 +463,8 @@ public:
    * @param _A_a7 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6, type_trait_take_t<T_arg7> _A_a7) const
+  T_return operator()(T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6, typename type_trait<T_arg7>::take _A_a7) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -531,7 +477,7 @@ public:
    * @param _A_a7 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6, type_trait_take_t<T_arg7> _A_a7) const
+  T_return operator()(T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6, typename type_trait<T_arg7>::take _A_a7) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
 
 protected:
@@ -555,25 +501,19 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_mem_functor0() : func_ptr_(nullptr) {}
+  const_mem_functor0() : func_ptr_(0) {}
 
   /** Constructs a const_mem_functor0 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_mem_functor0(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @return The return value of the method invocation.
    */
   T_return operator()(const T_obj* _A_obj) const
     { return (_A_obj->*(this->func_ptr_))(); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -604,33 +544,27 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_mem_functor1() : func_ptr_(nullptr) {}
+  const_mem_functor1() : func_ptr_(0) {}
 
   /** Constructs a const_mem_functor1 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_mem_functor1(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1) const
+  T_return operator()(const T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1) const
+  T_return operator()(const T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1) const
     { return (_A_obj.*func_ptr_)(_A_a1); }
 
 protected:
@@ -656,27 +590,21 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_mem_functor2() : func_ptr_(nullptr) {}
+  const_mem_functor2() : func_ptr_(0) {}
 
   /** Constructs a const_mem_functor2 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_mem_functor2(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2) const
+  T_return operator()(const T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -684,7 +612,7 @@ public:
    * @param _A_a2 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2) const
+  T_return operator()(const T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2); }
 
 protected:
@@ -711,28 +639,22 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_mem_functor3() : func_ptr_(nullptr) {}
+  const_mem_functor3() : func_ptr_(0) {}
 
   /** Constructs a const_mem_functor3 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_mem_functor3(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
    * @param _A_a3 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3) const
+  T_return operator()(const T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -741,7 +663,7 @@ public:
    * @param _A_a3 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3) const
+  T_return operator()(const T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3); }
 
 protected:
@@ -769,19 +691,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_mem_functor4() : func_ptr_(nullptr) {}
+  const_mem_functor4() : func_ptr_(0) {}
 
   /** Constructs a const_mem_functor4 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_mem_functor4(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -789,9 +706,8 @@ public:
    * @param _A_a4 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4) const
+  T_return operator()(const T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -801,7 +717,7 @@ public:
    * @param _A_a4 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4) const
+  T_return operator()(const T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4); }
 
 protected:
@@ -830,19 +746,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_mem_functor5() : func_ptr_(nullptr) {}
+  const_mem_functor5() : func_ptr_(0) {}
 
   /** Constructs a const_mem_functor5 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_mem_functor5(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -851,9 +762,8 @@ public:
    * @param _A_a5 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5) const
+  T_return operator()(const T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -864,7 +774,7 @@ public:
    * @param _A_a5 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5) const
+  T_return operator()(const T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
 
 protected:
@@ -894,19 +804,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_mem_functor6() : func_ptr_(nullptr) {}
+  const_mem_functor6() : func_ptr_(0) {}
 
   /** Constructs a const_mem_functor6 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_mem_functor6(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -916,9 +821,8 @@ public:
    * @param _A_a6 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6) const
+  T_return operator()(const T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -930,7 +834,7 @@ public:
    * @param _A_a6 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6) const
+  T_return operator()(const T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
 
 protected:
@@ -961,19 +865,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_mem_functor7() : func_ptr_(nullptr) {}
+  const_mem_functor7() : func_ptr_(0) {}
 
   /** Constructs a const_mem_functor7 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_mem_functor7(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -984,9 +883,8 @@ public:
    * @param _A_a7 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6, type_trait_take_t<T_arg7> _A_a7) const
+  T_return operator()(const T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6, typename type_trait<T_arg7>::take _A_a7) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -999,7 +897,7 @@ public:
    * @param _A_a7 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6, type_trait_take_t<T_arg7> _A_a7) const
+  T_return operator()(const T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6, typename type_trait<T_arg7>::take _A_a7) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
 
 protected:
@@ -1023,25 +921,19 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  volatile_mem_functor0() : func_ptr_(nullptr) {}
+  volatile_mem_functor0() : func_ptr_(0) {}
 
   /** Constructs a volatile_mem_functor0 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit volatile_mem_functor0(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @return The return value of the method invocation.
    */
   T_return operator()(T_obj* _A_obj) const
     { return (_A_obj->*(this->func_ptr_))(); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -1072,33 +964,27 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  volatile_mem_functor1() : func_ptr_(nullptr) {}
+  volatile_mem_functor1() : func_ptr_(0) {}
 
   /** Constructs a volatile_mem_functor1 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit volatile_mem_functor1(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1) const
+  T_return operator()(T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1) const
+  T_return operator()(T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1) const
     { return (_A_obj.*func_ptr_)(_A_a1); }
 
 protected:
@@ -1124,27 +1010,21 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  volatile_mem_functor2() : func_ptr_(nullptr) {}
+  volatile_mem_functor2() : func_ptr_(0) {}
 
   /** Constructs a volatile_mem_functor2 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit volatile_mem_functor2(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2) const
+  T_return operator()(T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -1152,7 +1032,7 @@ public:
    * @param _A_a2 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2) const
+  T_return operator()(T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2); }
 
 protected:
@@ -1179,28 +1059,22 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  volatile_mem_functor3() : func_ptr_(nullptr) {}
+  volatile_mem_functor3() : func_ptr_(0) {}
 
   /** Constructs a volatile_mem_functor3 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit volatile_mem_functor3(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
    * @param _A_a3 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3) const
+  T_return operator()(T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -1209,7 +1083,7 @@ public:
    * @param _A_a3 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3) const
+  T_return operator()(T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3); }
 
 protected:
@@ -1237,19 +1111,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  volatile_mem_functor4() : func_ptr_(nullptr) {}
+  volatile_mem_functor4() : func_ptr_(0) {}
 
   /** Constructs a volatile_mem_functor4 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit volatile_mem_functor4(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -1257,9 +1126,8 @@ public:
    * @param _A_a4 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4) const
+  T_return operator()(T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -1269,7 +1137,7 @@ public:
    * @param _A_a4 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4) const
+  T_return operator()(T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4); }
 
 protected:
@@ -1298,19 +1166,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  volatile_mem_functor5() : func_ptr_(nullptr) {}
+  volatile_mem_functor5() : func_ptr_(0) {}
 
   /** Constructs a volatile_mem_functor5 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit volatile_mem_functor5(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -1319,9 +1182,8 @@ public:
    * @param _A_a5 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5) const
+  T_return operator()(T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -1332,7 +1194,7 @@ public:
    * @param _A_a5 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5) const
+  T_return operator()(T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
 
 protected:
@@ -1362,19 +1224,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  volatile_mem_functor6() : func_ptr_(nullptr) {}
+  volatile_mem_functor6() : func_ptr_(0) {}
 
   /** Constructs a volatile_mem_functor6 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit volatile_mem_functor6(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -1384,9 +1241,8 @@ public:
    * @param _A_a6 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6) const
+  T_return operator()(T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -1398,7 +1254,7 @@ public:
    * @param _A_a6 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6) const
+  T_return operator()(T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
 
 protected:
@@ -1429,19 +1285,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  volatile_mem_functor7() : func_ptr_(nullptr) {}
+  volatile_mem_functor7() : func_ptr_(0) {}
 
   /** Constructs a volatile_mem_functor7 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit volatile_mem_functor7(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -1452,9 +1303,8 @@ public:
    * @param _A_a7 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6, type_trait_take_t<T_arg7> _A_a7) const
+  T_return operator()(T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6, typename type_trait<T_arg7>::take _A_a7) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -1467,7 +1317,7 @@ public:
    * @param _A_a7 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6, type_trait_take_t<T_arg7> _A_a7) const
+  T_return operator()(T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6, typename type_trait<T_arg7>::take _A_a7) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
 
 protected:
@@ -1491,25 +1341,19 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_volatile_mem_functor0() : func_ptr_(nullptr) {}
+  const_volatile_mem_functor0() : func_ptr_(0) {}
 
   /** Constructs a const_volatile_mem_functor0 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_volatile_mem_functor0(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @return The return value of the method invocation.
    */
   T_return operator()(const T_obj* _A_obj) const
     { return (_A_obj->*(this->func_ptr_))(); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -1540,33 +1384,27 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_volatile_mem_functor1() : func_ptr_(nullptr) {}
+  const_volatile_mem_functor1() : func_ptr_(0) {}
 
   /** Constructs a const_volatile_mem_functor1 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_volatile_mem_functor1(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1) const
+  T_return operator()(const T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1) const
+  T_return operator()(const T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1) const
     { return (_A_obj.*func_ptr_)(_A_a1); }
 
 protected:
@@ -1592,27 +1430,21 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_volatile_mem_functor2() : func_ptr_(nullptr) {}
+  const_volatile_mem_functor2() : func_ptr_(0) {}
 
   /** Constructs a const_volatile_mem_functor2 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_volatile_mem_functor2(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2) const
+  T_return operator()(const T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -1620,7 +1452,7 @@ public:
    * @param _A_a2 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2) const
+  T_return operator()(const T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2); }
 
 protected:
@@ -1647,28 +1479,22 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_volatile_mem_functor3() : func_ptr_(nullptr) {}
+  const_volatile_mem_functor3() : func_ptr_(0) {}
 
   /** Constructs a const_volatile_mem_functor3 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_volatile_mem_functor3(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
    * @param _A_a3 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3) const
+  T_return operator()(const T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -1677,7 +1503,7 @@ public:
    * @param _A_a3 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3) const
+  T_return operator()(const T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3); }
 
 protected:
@@ -1705,19 +1531,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_volatile_mem_functor4() : func_ptr_(nullptr) {}
+  const_volatile_mem_functor4() : func_ptr_(0) {}
 
   /** Constructs a const_volatile_mem_functor4 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_volatile_mem_functor4(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -1725,9 +1546,8 @@ public:
    * @param _A_a4 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4) const
+  T_return operator()(const T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -1737,7 +1557,7 @@ public:
    * @param _A_a4 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4) const
+  T_return operator()(const T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4); }
 
 protected:
@@ -1766,19 +1586,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_volatile_mem_functor5() : func_ptr_(nullptr) {}
+  const_volatile_mem_functor5() : func_ptr_(0) {}
 
   /** Constructs a const_volatile_mem_functor5 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_volatile_mem_functor5(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -1787,9 +1602,8 @@ public:
    * @param _A_a5 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5) const
+  T_return operator()(const T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -1800,7 +1614,7 @@ public:
    * @param _A_a5 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5) const
+  T_return operator()(const T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
 
 protected:
@@ -1830,19 +1644,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_volatile_mem_functor6() : func_ptr_(nullptr) {}
+  const_volatile_mem_functor6() : func_ptr_(0) {}
 
   /** Constructs a const_volatile_mem_functor6 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_volatile_mem_functor6(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -1852,9 +1661,8 @@ public:
    * @param _A_a6 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6) const
+  T_return operator()(const T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -1866,7 +1674,7 @@ public:
    * @param _A_a6 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6) const
+  T_return operator()(const T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
 
 protected:
@@ -1897,19 +1705,14 @@ public:
   typedef T_return result_type;
 
   /// Constructs an invalid functor.
-  const_volatile_mem_functor7() : func_ptr_(nullptr) {}
+  const_volatile_mem_functor7() : func_ptr_(0) {}
 
   /** Constructs a const_volatile_mem_functor7 object that wraps the passed method.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
   explicit const_volatile_mem_functor7(function_type _A_func) : func_ptr_(_A_func) {}
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Execute the wrapped method operating on the passed instance.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method should operate on.
    * @param _A_a1 Argument to be passed on to the method.
    * @param _A_a2 Argument to be passed on to the method.
@@ -1920,9 +1723,8 @@ public:
    * @param _A_a7 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj* _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6, type_trait_take_t<T_arg7> _A_a7) const
+  T_return operator()(const T_obj* _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6, typename type_trait<T_arg7>::take _A_a7) const
     { return (_A_obj->*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
   /** Execute the wrapped method operating on the passed instance.
    * @param _A_obj Reference to instance the method should operate on.
@@ -1935,7 +1737,7 @@ public:
    * @param _A_a7 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(const T_obj& _A_obj, type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6, type_trait_take_t<T_arg7> _A_a7) const
+  T_return operator()(const T_obj& _A_obj, typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6, typename type_trait<T_arg7>::take _A_a7) const
     { return (_A_obj.*func_ptr_)(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
 
 protected:
@@ -1960,12 +1762,7 @@ class bound_mem_functor0
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_mem_functor0 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -1973,7 +1770,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_mem_functor0 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -1996,25 +1792,20 @@ public:
   limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj>
-struct visitor<bound_mem_functor0<T_return, T_obj> >
+template <class T_action, class T_return, class T_obj>
+void visit_each(const T_action& _A_action,
+                const bound_mem_functor0<T_return, T_obj>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_mem_functor0<T_return, T_obj>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_mem_functor1 encapsulates a  method with 1 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_mem_functor1.
@@ -2034,12 +1825,7 @@ class bound_mem_functor1
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_mem_functor1 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -2047,7 +1833,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_mem_functor1 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -2062,7 +1847,7 @@ public:
    * @param _A_a1 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1); }
 
 //protected:
@@ -2071,25 +1856,20 @@ public:
   limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1>
-struct visitor<bound_mem_functor1<T_return, T_obj, T_arg1> >
+template <class T_action, class T_return, class T_obj, class T_arg1>
+void visit_each(const T_action& _A_action,
+                const bound_mem_functor1<T_return, T_obj, T_arg1>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_mem_functor1<T_return, T_obj, T_arg1>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_mem_functor2 encapsulates a  method with 2 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_mem_functor2.
@@ -2110,12 +1890,7 @@ class bound_mem_functor2
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_mem_functor2 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -2123,7 +1898,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_mem_functor2 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -2139,7 +1913,7 @@ public:
    * @param _A_a2 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2); }
 
 //protected:
@@ -2148,25 +1922,20 @@ public:
   limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2>
-struct visitor<bound_mem_functor2<T_return, T_obj, T_arg1, T_arg2> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2>
+void visit_each(const T_action& _A_action,
+                const bound_mem_functor2<T_return, T_obj, T_arg1, T_arg2>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_mem_functor2<T_return, T_obj, T_arg1, T_arg2>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_mem_functor3 encapsulates a  method with 3 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_mem_functor3.
@@ -2188,12 +1957,7 @@ class bound_mem_functor3
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_mem_functor3 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -2201,7 +1965,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_mem_functor3 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -2218,7 +1981,7 @@ public:
    * @param _A_a3 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3); }
 
 //protected:
@@ -2227,25 +1990,20 @@ public:
   limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3>
-struct visitor<bound_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3>
+void visit_each(const T_action& _A_action,
+                const bound_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_mem_functor4 encapsulates a  method with 4 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_mem_functor4.
@@ -2268,12 +2026,7 @@ class bound_mem_functor4
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_mem_functor4 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -2281,7 +2034,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_mem_functor4 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -2299,7 +2051,7 @@ public:
    * @param _A_a4 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4); }
 
 //protected:
@@ -2308,25 +2060,20 @@ public:
   limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4>
-struct visitor<bound_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4>
+void visit_each(const T_action& _A_action,
+                const bound_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_mem_functor5 encapsulates a  method with 5 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_mem_functor5.
@@ -2350,12 +2097,7 @@ class bound_mem_functor5
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_mem_functor5 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -2363,7 +2105,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_mem_functor5 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -2382,7 +2123,7 @@ public:
    * @param _A_a5 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
 
 //protected:
@@ -2391,25 +2132,20 @@ public:
   limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
-struct visitor<bound_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
+void visit_each(const T_action& _A_action,
+                const bound_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_mem_functor6 encapsulates a  method with 6 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_mem_functor6.
@@ -2434,12 +2170,7 @@ class bound_mem_functor6
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_mem_functor6 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -2447,7 +2178,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_mem_functor6 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -2467,7 +2197,7 @@ public:
    * @param _A_a6 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
 
 //protected:
@@ -2476,25 +2206,20 @@ public:
   limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
-struct visitor<bound_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
+void visit_each(const T_action& _A_action,
+                const bound_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_mem_functor7 encapsulates a  method with 7 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_mem_functor7.
@@ -2520,12 +2245,7 @@ class bound_mem_functor7
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_mem_functor7 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -2533,7 +2253,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_mem_functor7 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -2554,7 +2273,7 @@ public:
    * @param _A_a7 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6, type_trait_take_t<T_arg7> _A_a7) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6, typename type_trait<T_arg7>::take _A_a7) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
 
 //protected:
@@ -2563,25 +2282,20 @@ public:
   limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
-struct visitor<bound_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
+void visit_each(const T_action& _A_action,
+                const bound_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_mem_functor0 encapsulates a const method with 0 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_mem_functor0.
@@ -2600,12 +2314,7 @@ class bound_const_mem_functor0
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_mem_functor0 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -2613,7 +2322,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_mem_functor0 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -2636,25 +2344,20 @@ public:
   const_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj>
-struct visitor<bound_const_mem_functor0<T_return, T_obj> >
+template <class T_action, class T_return, class T_obj>
+void visit_each(const T_action& _A_action,
+                const bound_const_mem_functor0<T_return, T_obj>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_mem_functor0<T_return, T_obj>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_mem_functor1 encapsulates a const method with 1 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_mem_functor1.
@@ -2674,12 +2377,7 @@ class bound_const_mem_functor1
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_mem_functor1 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -2687,7 +2385,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_mem_functor1 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -2702,7 +2399,7 @@ public:
    * @param _A_a1 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1); }
 
 //protected:
@@ -2711,25 +2408,20 @@ public:
   const_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1>
-struct visitor<bound_const_mem_functor1<T_return, T_obj, T_arg1> >
+template <class T_action, class T_return, class T_obj, class T_arg1>
+void visit_each(const T_action& _A_action,
+                const bound_const_mem_functor1<T_return, T_obj, T_arg1>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_mem_functor1<T_return, T_obj, T_arg1>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_mem_functor2 encapsulates a const method with 2 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_mem_functor2.
@@ -2750,12 +2442,7 @@ class bound_const_mem_functor2
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_mem_functor2 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -2763,7 +2450,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_mem_functor2 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -2779,7 +2465,7 @@ public:
    * @param _A_a2 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2); }
 
 //protected:
@@ -2788,25 +2474,20 @@ public:
   const_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2>
-struct visitor<bound_const_mem_functor2<T_return, T_obj, T_arg1, T_arg2> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2>
+void visit_each(const T_action& _A_action,
+                const bound_const_mem_functor2<T_return, T_obj, T_arg1, T_arg2>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_mem_functor2<T_return, T_obj, T_arg1, T_arg2>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_mem_functor3 encapsulates a const method with 3 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_mem_functor3.
@@ -2828,12 +2509,7 @@ class bound_const_mem_functor3
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_mem_functor3 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -2841,7 +2517,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_mem_functor3 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -2858,7 +2533,7 @@ public:
    * @param _A_a3 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3); }
 
 //protected:
@@ -2867,25 +2542,20 @@ public:
   const_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3>
-struct visitor<bound_const_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3>
+void visit_each(const T_action& _A_action,
+                const bound_const_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_mem_functor4 encapsulates a const method with 4 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_mem_functor4.
@@ -2908,12 +2578,7 @@ class bound_const_mem_functor4
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_mem_functor4 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -2921,7 +2586,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_mem_functor4 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -2939,7 +2603,7 @@ public:
    * @param _A_a4 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4); }
 
 //protected:
@@ -2948,25 +2612,20 @@ public:
   const_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4>
-struct visitor<bound_const_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4>
+void visit_each(const T_action& _A_action,
+                const bound_const_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_mem_functor5 encapsulates a const method with 5 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_mem_functor5.
@@ -2990,12 +2649,7 @@ class bound_const_mem_functor5
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_mem_functor5 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -3003,7 +2657,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_mem_functor5 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -3022,7 +2675,7 @@ public:
    * @param _A_a5 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
 
 //protected:
@@ -3031,25 +2684,20 @@ public:
   const_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
-struct visitor<bound_const_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
+void visit_each(const T_action& _A_action,
+                const bound_const_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_mem_functor6 encapsulates a const method with 6 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_mem_functor6.
@@ -3074,12 +2722,7 @@ class bound_const_mem_functor6
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_mem_functor6 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -3087,7 +2730,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_mem_functor6 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -3107,7 +2749,7 @@ public:
    * @param _A_a6 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
 
 //protected:
@@ -3116,25 +2758,20 @@ public:
   const_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
-struct visitor<bound_const_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
+void visit_each(const T_action& _A_action,
+                const bound_const_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_mem_functor7 encapsulates a const method with 7 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_mem_functor7.
@@ -3160,12 +2797,7 @@ class bound_const_mem_functor7
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_mem_functor7 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -3173,7 +2805,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_mem_functor7 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -3194,7 +2825,7 @@ public:
    * @param _A_a7 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6, type_trait_take_t<T_arg7> _A_a7) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6, typename type_trait<T_arg7>::take _A_a7) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
 
 //protected:
@@ -3203,25 +2834,20 @@ public:
   const_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
-struct visitor<bound_const_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
+void visit_each(const T_action& _A_action,
+                const bound_const_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_volatile_mem_functor0 encapsulates a volatile method with 0 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_volatile_mem_functor0.
@@ -3240,12 +2866,7 @@ class bound_volatile_mem_functor0
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_volatile_mem_functor0 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -3253,7 +2874,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_volatile_mem_functor0 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -3276,25 +2896,20 @@ public:
   volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj>
-struct visitor<bound_volatile_mem_functor0<T_return, T_obj> >
+template <class T_action, class T_return, class T_obj>
+void visit_each(const T_action& _A_action,
+                const bound_volatile_mem_functor0<T_return, T_obj>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_volatile_mem_functor0<T_return, T_obj>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_volatile_mem_functor1 encapsulates a volatile method with 1 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_volatile_mem_functor1.
@@ -3314,12 +2929,7 @@ class bound_volatile_mem_functor1
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_volatile_mem_functor1 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -3327,7 +2937,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_volatile_mem_functor1 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -3342,7 +2951,7 @@ public:
    * @param _A_a1 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1); }
 
 //protected:
@@ -3351,25 +2960,20 @@ public:
   volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1>
-struct visitor<bound_volatile_mem_functor1<T_return, T_obj, T_arg1> >
+template <class T_action, class T_return, class T_obj, class T_arg1>
+void visit_each(const T_action& _A_action,
+                const bound_volatile_mem_functor1<T_return, T_obj, T_arg1>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_volatile_mem_functor1<T_return, T_obj, T_arg1>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_volatile_mem_functor2 encapsulates a volatile method with 2 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_volatile_mem_functor2.
@@ -3390,12 +2994,7 @@ class bound_volatile_mem_functor2
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_volatile_mem_functor2 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -3403,7 +3002,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_volatile_mem_functor2 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -3419,7 +3017,7 @@ public:
    * @param _A_a2 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2); }
 
 //protected:
@@ -3428,25 +3026,20 @@ public:
   volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2>
-struct visitor<bound_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2>
+void visit_each(const T_action& _A_action,
+                const bound_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_volatile_mem_functor3 encapsulates a volatile method with 3 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_volatile_mem_functor3.
@@ -3468,12 +3061,7 @@ class bound_volatile_mem_functor3
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_volatile_mem_functor3 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -3481,7 +3069,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_volatile_mem_functor3 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -3498,7 +3085,7 @@ public:
    * @param _A_a3 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3); }
 
 //protected:
@@ -3507,25 +3094,20 @@ public:
   volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3>
-struct visitor<bound_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3>
+void visit_each(const T_action& _A_action,
+                const bound_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_volatile_mem_functor4 encapsulates a volatile method with 4 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_volatile_mem_functor4.
@@ -3548,12 +3130,7 @@ class bound_volatile_mem_functor4
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_volatile_mem_functor4 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -3561,7 +3138,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_volatile_mem_functor4 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -3579,7 +3155,7 @@ public:
    * @param _A_a4 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4); }
 
 //protected:
@@ -3588,25 +3164,20 @@ public:
   volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4>
-struct visitor<bound_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4>
+void visit_each(const T_action& _A_action,
+                const bound_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_volatile_mem_functor5 encapsulates a volatile method with 5 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_volatile_mem_functor5.
@@ -3630,12 +3201,7 @@ class bound_volatile_mem_functor5
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_volatile_mem_functor5 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -3643,7 +3209,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_volatile_mem_functor5 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -3662,7 +3227,7 @@ public:
    * @param _A_a5 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
 
 //protected:
@@ -3671,25 +3236,20 @@ public:
   volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
-struct visitor<bound_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
+void visit_each(const T_action& _A_action,
+                const bound_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_volatile_mem_functor6 encapsulates a volatile method with 6 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_volatile_mem_functor6.
@@ -3714,12 +3274,7 @@ class bound_volatile_mem_functor6
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_volatile_mem_functor6 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -3727,7 +3282,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_volatile_mem_functor6 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -3747,7 +3301,7 @@ public:
    * @param _A_a6 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
 
 //protected:
@@ -3756,25 +3310,20 @@ public:
   volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
-struct visitor<bound_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
+void visit_each(const T_action& _A_action,
+                const bound_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_volatile_mem_functor7 encapsulates a volatile method with 7 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_volatile_mem_functor7.
@@ -3800,12 +3349,7 @@ class bound_volatile_mem_functor7
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_volatile_mem_functor7 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -3813,7 +3357,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_volatile_mem_functor7 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -3834,7 +3377,7 @@ public:
    * @param _A_a7 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6, type_trait_take_t<T_arg7> _A_a7) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6, typename type_trait<T_arg7>::take _A_a7) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
 
 //protected:
@@ -3843,25 +3386,20 @@ public:
   volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
-struct visitor<bound_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
+void visit_each(const T_action& _A_action,
+                const bound_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_volatile_mem_functor0 encapsulates a const volatile method with 0 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_volatile_mem_functor0.
@@ -3880,12 +3418,7 @@ class bound_const_volatile_mem_functor0
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_volatile_mem_functor0 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -3893,7 +3426,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_volatile_mem_functor0 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -3916,25 +3448,20 @@ public:
   const_volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj>
-struct visitor<bound_const_volatile_mem_functor0<T_return, T_obj> >
+template <class T_action, class T_return, class T_obj>
+void visit_each(const T_action& _A_action,
+                const bound_const_volatile_mem_functor0<T_return, T_obj>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_volatile_mem_functor0<T_return, T_obj>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_volatile_mem_functor1 encapsulates a const volatile method with 1 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_volatile_mem_functor1.
@@ -3954,12 +3481,7 @@ class bound_const_volatile_mem_functor1
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_volatile_mem_functor1 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -3967,7 +3489,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_volatile_mem_functor1 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -3982,7 +3503,7 @@ public:
    * @param _A_a1 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1); }
 
 //protected:
@@ -3991,25 +3512,20 @@ public:
   const_volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1>
-struct visitor<bound_const_volatile_mem_functor1<T_return, T_obj, T_arg1> >
+template <class T_action, class T_return, class T_obj, class T_arg1>
+void visit_each(const T_action& _A_action,
+                const bound_const_volatile_mem_functor1<T_return, T_obj, T_arg1>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_volatile_mem_functor1<T_return, T_obj, T_arg1>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_volatile_mem_functor2 encapsulates a const volatile method with 2 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_volatile_mem_functor2.
@@ -4030,12 +3546,7 @@ class bound_const_volatile_mem_functor2
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_volatile_mem_functor2 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -4043,7 +3554,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_volatile_mem_functor2 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -4059,7 +3569,7 @@ public:
    * @param _A_a2 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2); }
 
 //protected:
@@ -4068,25 +3578,20 @@ public:
   const_volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2>
-struct visitor<bound_const_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2>
+void visit_each(const T_action& _A_action,
+                const bound_const_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_volatile_mem_functor3 encapsulates a const volatile method with 3 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_volatile_mem_functor3.
@@ -4108,12 +3613,7 @@ class bound_const_volatile_mem_functor3
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_volatile_mem_functor3 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -4121,7 +3621,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_volatile_mem_functor3 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -4138,7 +3637,7 @@ public:
    * @param _A_a3 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3); }
 
 //protected:
@@ -4147,25 +3646,20 @@ public:
   const_volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3>
-struct visitor<bound_const_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3>
+void visit_each(const T_action& _A_action,
+                const bound_const_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_volatile_mem_functor4 encapsulates a const volatile method with 4 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_volatile_mem_functor4.
@@ -4188,12 +3682,7 @@ class bound_const_volatile_mem_functor4
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_volatile_mem_functor4 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -4201,7 +3690,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_volatile_mem_functor4 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -4219,7 +3707,7 @@ public:
    * @param _A_a4 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4); }
 
 //protected:
@@ -4228,25 +3716,20 @@ public:
   const_volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4>
-struct visitor<bound_const_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4>
+void visit_each(const T_action& _A_action,
+                const bound_const_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_volatile_mem_functor5 encapsulates a const volatile method with 5 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_volatile_mem_functor5.
@@ -4270,12 +3753,7 @@ class bound_const_volatile_mem_functor5
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_volatile_mem_functor5 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -4283,7 +3761,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_volatile_mem_functor5 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -4302,7 +3779,7 @@ public:
    * @param _A_a5 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
 
 //protected:
@@ -4311,25 +3788,20 @@ public:
   const_volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
-struct visitor<bound_const_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
+void visit_each(const T_action& _A_action,
+                const bound_const_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_volatile_mem_functor6 encapsulates a const volatile method with 6 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_volatile_mem_functor6.
@@ -4354,12 +3826,7 @@ class bound_const_volatile_mem_functor6
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_volatile_mem_functor6 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -4367,7 +3834,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_volatile_mem_functor6 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -4387,7 +3853,7 @@ public:
    * @param _A_a6 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
 
 //protected:
@@ -4396,25 +3862,20 @@ public:
   const_volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
-struct visitor<bound_const_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
+void visit_each(const T_action& _A_action,
+                const bound_const_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 /** bound_const_volatile_mem_functor7 encapsulates a const volatile method with 7 arguments and an object instance.
  * Use the convenience function mem_fun() to create an instance of bound_const_volatile_mem_functor7.
@@ -4440,12 +3901,7 @@ class bound_const_volatile_mem_functor7
 public:
   typedef typename base_type_::function_type function_type;
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
   /** Constructs a bound_const_volatile_mem_functor7 object that wraps the passed method.
-   *
-   * @deprecated Please use the constructor that takes the object by reference
-   * instead.
-   *
    * @param _A_obj Pointer to instance the method will operate on.
    * @param _A_func Pointer to method will be invoked from operator()().
    */
@@ -4453,7 +3909,6 @@ public:
     : base_type_(_A_func),
       obj_(*_A_obj)
     {}
-#endif // SIGCXX_DISABLE_DEPRECATED
 
   /** Constructs a bound_const_volatile_mem_functor7 object that wraps the passed method.
    * @param _A_obj Reference to instance the method will operate on.
@@ -4474,7 +3929,7 @@ public:
    * @param _A_a7 Argument to be passed on to the method.
    * @return The return value of the method invocation.
    */
-  T_return operator()(type_trait_take_t<T_arg1> _A_a1, type_trait_take_t<T_arg2> _A_a2, type_trait_take_t<T_arg3> _A_a3, type_trait_take_t<T_arg4> _A_a4, type_trait_take_t<T_arg5> _A_a5, type_trait_take_t<T_arg6> _A_a6, type_trait_take_t<T_arg7> _A_a7) const
+  T_return operator()(typename type_trait<T_arg1>::take _A_a1, typename type_trait<T_arg2>::take _A_a2, typename type_trait<T_arg3>::take _A_a3, typename type_trait<T_arg4>::take _A_a4, typename type_trait<T_arg5>::take _A_a5, typename type_trait<T_arg6>::take _A_a6, typename type_trait<T_arg7>::take _A_a7) const
     { return (obj_.invoke().*(this->func_ptr_))(_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
 
 //protected:
@@ -4483,25 +3938,20 @@ public:
   const_volatile_limit_reference<T_obj> obj_;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::bound_const_volatile_mem_functor performs a functor
  * on the object instance stored in the sigc::bound_const_volatile_mem_functor object.
  *
  * @ingroup mem_fun
  */
-template <class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
-struct visitor<bound_const_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7> >
+template <class T_action, class T_return, class T_obj, class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
+void visit_each(const T_action& _A_action,
+                const bound_const_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const bound_const_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.obj_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  sigc::visit_each(_A_action, _A_target.obj_);
+}
+
 
 // numbered
 /** Creates a functor of type sigc::mem_functor0 which wraps a  method.
@@ -4856,11 +4306,7 @@ inline const_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_ar
 mem_fun7(T_return (T_obj::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) const volatile)
 { return const_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor0 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -4871,7 +4317,6 @@ template <class T_return, class T_obj, class T_obj2>
 inline bound_mem_functor0<T_return, T_obj>
 mem_fun0(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)() )
 { return bound_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor0 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -4885,11 +4330,7 @@ inline bound_mem_functor0<T_return, T_obj>
 mem_fun0(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)() )
 { return bound_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor1 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -4900,7 +4341,6 @@ template <class T_arg1, class T_return, class T_obj, class T_obj2>
 inline bound_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun1(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1) )
 { return bound_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor1 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -4914,11 +4354,7 @@ inline bound_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun1(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1) )
 { return bound_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor2 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -4929,7 +4365,6 @@ template <class T_arg1, class T_arg2, class T_return, class T_obj, class T_obj2>
 inline bound_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun2(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) )
 { return bound_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor2 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -4943,11 +4378,7 @@ inline bound_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun2(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) )
 { return bound_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor3 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -4958,7 +4389,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_return, class T_obj,
 inline bound_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>
 mem_fun3(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) )
 { return bound_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor3 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -4972,11 +4402,7 @@ inline bound_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>
 mem_fun3(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) )
 { return bound_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor4 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -4987,7 +4413,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_return
 inline bound_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>
 mem_fun4(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) )
 { return bound_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor4 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5001,11 +4426,7 @@ inline bound_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>
 mem_fun4(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) )
 { return bound_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor5 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5016,7 +4437,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>
 mem_fun5(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) )
 { return bound_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor5 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5030,11 +4450,7 @@ inline bound_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg
 mem_fun5(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) )
 { return bound_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor6 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5045,7 +4461,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>
 mem_fun6(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) )
 { return bound_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor6 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5059,11 +4474,7 @@ inline bound_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg
 mem_fun6(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) )
 { return bound_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor7 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5074,7 +4485,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>
 mem_fun7(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) )
 { return bound_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor7 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5088,11 +4498,7 @@ inline bound_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg
 mem_fun7(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) )
 { return bound_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor0 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5103,7 +4509,6 @@ template <class T_return, class T_obj, class T_obj2>
 inline bound_const_mem_functor0<T_return, T_obj>
 mem_fun0(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)() const)
 { return bound_const_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor0 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5117,11 +4522,7 @@ inline bound_const_mem_functor0<T_return, T_obj>
 mem_fun0(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)() const)
 { return bound_const_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor1 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5132,7 +4533,6 @@ template <class T_arg1, class T_return, class T_obj, class T_obj2>
 inline bound_const_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun1(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1) const)
 { return bound_const_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor1 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5146,11 +4546,7 @@ inline bound_const_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun1(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1) const)
 { return bound_const_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor2 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5161,7 +4557,6 @@ template <class T_arg1, class T_arg2, class T_return, class T_obj, class T_obj2>
 inline bound_const_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun2(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) const)
 { return bound_const_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor2 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5175,11 +4570,7 @@ inline bound_const_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun2(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) const)
 { return bound_const_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor3 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5190,7 +4581,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_return, class T_obj,
 inline bound_const_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>
 mem_fun3(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) const)
 { return bound_const_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor3 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5204,11 +4594,7 @@ inline bound_const_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>
 mem_fun3(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) const)
 { return bound_const_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor4 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5219,7 +4605,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_return
 inline bound_const_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>
 mem_fun4(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) const)
 { return bound_const_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor4 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5233,11 +4618,7 @@ inline bound_const_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>
 mem_fun4(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) const)
 { return bound_const_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor5 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5248,7 +4629,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_const_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>
 mem_fun5(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) const)
 { return bound_const_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor5 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5262,11 +4642,7 @@ inline bound_const_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4,
 mem_fun5(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) const)
 { return bound_const_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor6 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5277,7 +4653,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_const_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>
 mem_fun6(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) const)
 { return bound_const_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor6 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5291,11 +4666,7 @@ inline bound_const_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4,
 mem_fun6(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) const)
 { return bound_const_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor7 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5306,7 +4677,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_const_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>
 mem_fun7(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) const)
 { return bound_const_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor7 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5320,11 +4690,7 @@ inline bound_const_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4,
 mem_fun7(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) const)
 { return bound_const_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor0 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5335,7 +4701,6 @@ template <class T_return, class T_obj, class T_obj2>
 inline bound_volatile_mem_functor0<T_return, T_obj>
 mem_fun0(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)() volatile)
 { return bound_volatile_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor0 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5349,11 +4714,7 @@ inline bound_volatile_mem_functor0<T_return, T_obj>
 mem_fun0(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)() volatile)
 { return bound_volatile_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor1 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5364,7 +4725,6 @@ template <class T_arg1, class T_return, class T_obj, class T_obj2>
 inline bound_volatile_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun1(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1) volatile)
 { return bound_volatile_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor1 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5378,11 +4738,7 @@ inline bound_volatile_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun1(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1) volatile)
 { return bound_volatile_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor2 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5393,7 +4749,6 @@ template <class T_arg1, class T_arg2, class T_return, class T_obj, class T_obj2>
 inline bound_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun2(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) volatile)
 { return bound_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor2 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5407,11 +4762,7 @@ inline bound_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun2(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) volatile)
 { return bound_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor3 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5422,7 +4773,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_return, class T_obj,
 inline bound_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>
 mem_fun3(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) volatile)
 { return bound_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor3 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5436,11 +4786,7 @@ inline bound_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>
 mem_fun3(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) volatile)
 { return bound_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor4 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5451,7 +4797,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_return
 inline bound_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>
 mem_fun4(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) volatile)
 { return bound_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor4 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5465,11 +4810,7 @@ inline bound_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_ar
 mem_fun4(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) volatile)
 { return bound_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor5 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5480,7 +4821,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>
 mem_fun5(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) volatile)
 { return bound_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor5 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5494,11 +4834,7 @@ inline bound_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_ar
 mem_fun5(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) volatile)
 { return bound_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor6 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5509,7 +4845,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>
 mem_fun6(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) volatile)
 { return bound_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor6 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5523,11 +4858,7 @@ inline bound_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_ar
 mem_fun6(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) volatile)
 { return bound_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor7 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5538,7 +4869,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>
 mem_fun7(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) volatile)
 { return bound_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor7 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5552,11 +4882,7 @@ inline bound_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_ar
 mem_fun7(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) volatile)
 { return bound_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor0 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5567,7 +4893,6 @@ template <class T_return, class T_obj, class T_obj2>
 inline bound_const_volatile_mem_functor0<T_return, T_obj>
 mem_fun0(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)() const volatile)
 { return bound_const_volatile_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor0 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5581,11 +4906,7 @@ inline bound_const_volatile_mem_functor0<T_return, T_obj>
 mem_fun0(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)() const volatile)
 { return bound_const_volatile_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor1 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5596,7 +4917,6 @@ template <class T_arg1, class T_return, class T_obj, class T_obj2>
 inline bound_const_volatile_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun1(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1) const volatile)
 { return bound_const_volatile_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor1 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5610,11 +4930,7 @@ inline bound_const_volatile_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun1(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1) const volatile)
 { return bound_const_volatile_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor2 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5625,7 +4941,6 @@ template <class T_arg1, class T_arg2, class T_return, class T_obj, class T_obj2>
 inline bound_const_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun2(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) const volatile)
 { return bound_const_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor2 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5639,11 +4954,7 @@ inline bound_const_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun2(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) const volatile)
 { return bound_const_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor3 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5654,7 +4965,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_return, class T_obj,
 inline bound_const_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>
 mem_fun3(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) const volatile)
 { return bound_const_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor3 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5668,11 +4978,7 @@ inline bound_const_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3
 mem_fun3(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) const volatile)
 { return bound_const_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor4 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5683,7 +4989,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_return
 inline bound_const_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>
 mem_fun4(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) const volatile)
 { return bound_const_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor4 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5697,11 +5002,7 @@ inline bound_const_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3
 mem_fun4(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) const volatile)
 { return bound_const_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor5 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5712,7 +5013,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_const_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>
 mem_fun5(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) const volatile)
 { return bound_const_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor5 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5726,11 +5026,7 @@ inline bound_const_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3
 mem_fun5(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) const volatile)
 { return bound_const_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor6 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5741,7 +5037,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_const_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>
 mem_fun6(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) const volatile)
 { return bound_const_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor6 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -5755,11 +5050,7 @@ inline bound_const_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3
 mem_fun6(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) const volatile)
 { return bound_const_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor7 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -5770,7 +5061,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_const_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>
 mem_fun7(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) const volatile)
 { return bound_const_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor7 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6138,11 +5428,7 @@ inline const_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_ar
 mem_fun(T_return (T_obj::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) const volatile)
 { return const_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor0 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6153,7 +5439,6 @@ template <class T_return, class T_obj, class T_obj2>
 inline bound_mem_functor0<T_return, T_obj>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)() )
 { return bound_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor0 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6167,11 +5452,7 @@ inline bound_mem_functor0<T_return, T_obj>
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)() )
 { return bound_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor1 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6182,7 +5463,6 @@ template <class T_arg1, class T_return, class T_obj, class T_obj2>
 inline bound_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1) )
 { return bound_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor1 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6196,11 +5476,7 @@ inline bound_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1) )
 { return bound_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor2 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6211,7 +5487,6 @@ template <class T_arg1, class T_arg2, class T_return, class T_obj, class T_obj2>
 inline bound_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) )
 { return bound_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor2 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6225,11 +5500,7 @@ inline bound_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) )
 { return bound_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor3 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6240,7 +5511,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_return, class T_obj,
 inline bound_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) )
 { return bound_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor3 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6254,11 +5524,7 @@ inline bound_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) )
 { return bound_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor4 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6269,7 +5535,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_return
 inline bound_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) )
 { return bound_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor4 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6283,11 +5548,7 @@ inline bound_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) )
 { return bound_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor5 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6298,7 +5559,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) )
 { return bound_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor5 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6312,11 +5572,7 @@ inline bound_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) )
 { return bound_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor6 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6327,7 +5583,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) )
 { return bound_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor6 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6341,11 +5596,7 @@ inline bound_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) )
 { return bound_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_mem_functor7 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6356,7 +5607,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) )
 { return bound_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_mem_functor7 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6370,11 +5620,7 @@ inline bound_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) )
 { return bound_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor0 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6385,7 +5631,6 @@ template <class T_return, class T_obj, class T_obj2>
 inline bound_const_mem_functor0<T_return, T_obj>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)() const)
 { return bound_const_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor0 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6399,11 +5644,7 @@ inline bound_const_mem_functor0<T_return, T_obj>
 mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)() const)
 { return bound_const_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor1 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6414,7 +5655,6 @@ template <class T_arg1, class T_return, class T_obj, class T_obj2>
 inline bound_const_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1) const)
 { return bound_const_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor1 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6428,11 +5668,7 @@ inline bound_const_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1) const)
 { return bound_const_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor2 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6443,7 +5679,6 @@ template <class T_arg1, class T_arg2, class T_return, class T_obj, class T_obj2>
 inline bound_const_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) const)
 { return bound_const_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor2 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6457,11 +5692,7 @@ inline bound_const_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) const)
 { return bound_const_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor3 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6472,7 +5703,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_return, class T_obj,
 inline bound_const_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) const)
 { return bound_const_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor3 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6486,11 +5716,7 @@ inline bound_const_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>
 mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) const)
 { return bound_const_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor4 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6501,7 +5727,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_return
 inline bound_const_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) const)
 { return bound_const_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor4 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6515,11 +5740,7 @@ inline bound_const_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>
 mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) const)
 { return bound_const_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor5 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6530,7 +5751,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_const_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) const)
 { return bound_const_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor5 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6544,11 +5764,7 @@ inline bound_const_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4,
 mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) const)
 { return bound_const_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor6 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6559,7 +5775,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_const_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) const)
 { return bound_const_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor6 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6573,11 +5788,7 @@ inline bound_const_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4,
 mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) const)
 { return bound_const_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_mem_functor7 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6588,7 +5799,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_const_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) const)
 { return bound_const_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_mem_functor7 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6602,11 +5812,7 @@ inline bound_const_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4,
 mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) const)
 { return bound_const_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor0 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6617,7 +5823,6 @@ template <class T_return, class T_obj, class T_obj2>
 inline bound_volatile_mem_functor0<T_return, T_obj>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)() volatile)
 { return bound_volatile_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor0 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6631,11 +5836,7 @@ inline bound_volatile_mem_functor0<T_return, T_obj>
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)() volatile)
 { return bound_volatile_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor1 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6646,7 +5847,6 @@ template <class T_arg1, class T_return, class T_obj, class T_obj2>
 inline bound_volatile_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1) volatile)
 { return bound_volatile_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor1 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6660,11 +5860,7 @@ inline bound_volatile_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1) volatile)
 { return bound_volatile_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor2 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6675,7 +5871,6 @@ template <class T_arg1, class T_arg2, class T_return, class T_obj, class T_obj2>
 inline bound_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) volatile)
 { return bound_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor2 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6689,11 +5884,7 @@ inline bound_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) volatile)
 { return bound_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor3 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6704,7 +5895,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_return, class T_obj,
 inline bound_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) volatile)
 { return bound_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor3 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6718,11 +5908,7 @@ inline bound_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) volatile)
 { return bound_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor4 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6733,7 +5919,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_return
 inline bound_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) volatile)
 { return bound_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor4 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6747,11 +5932,7 @@ inline bound_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_ar
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) volatile)
 { return bound_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor5 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6762,7 +5943,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) volatile)
 { return bound_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor5 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6776,11 +5956,7 @@ inline bound_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_ar
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) volatile)
 { return bound_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor6 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6791,7 +5967,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) volatile)
 { return bound_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor6 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6805,11 +5980,7 @@ inline bound_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_ar
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) volatile)
 { return bound_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_volatile_mem_functor7 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6820,7 +5991,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>
 mem_fun(/**/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) volatile)
 { return bound_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_volatile_mem_functor7 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6834,11 +6004,7 @@ inline bound_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_ar
 mem_fun(/**/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) volatile)
 { return bound_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor0 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6849,7 +6015,6 @@ template <class T_return, class T_obj, class T_obj2>
 inline bound_const_volatile_mem_functor0<T_return, T_obj>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)() const volatile)
 { return bound_const_volatile_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor0 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6863,11 +6028,7 @@ inline bound_const_volatile_mem_functor0<T_return, T_obj>
 mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)() const volatile)
 { return bound_const_volatile_mem_functor0<T_return, T_obj>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor1 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6878,7 +6039,6 @@ template <class T_arg1, class T_return, class T_obj, class T_obj2>
 inline bound_const_volatile_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1) const volatile)
 { return bound_const_volatile_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor1 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6892,11 +6052,7 @@ inline bound_const_volatile_mem_functor1<T_return, T_obj, T_arg1>
 mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1) const volatile)
 { return bound_const_volatile_mem_functor1<T_return, T_obj, T_arg1>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor2 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6907,7 +6063,6 @@ template <class T_arg1, class T_arg2, class T_return, class T_obj, class T_obj2>
 inline bound_const_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) const volatile)
 { return bound_const_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor2 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6921,11 +6076,7 @@ inline bound_const_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>
 mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2) const volatile)
 { return bound_const_volatile_mem_functor2<T_return, T_obj, T_arg1, T_arg2>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor3 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6936,7 +6087,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_return, class T_obj,
 inline bound_const_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) const volatile)
 { return bound_const_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor3 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6950,11 +6100,7 @@ inline bound_const_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3
 mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3) const volatile)
 { return bound_const_volatile_mem_functor3<T_return, T_obj, T_arg1, T_arg2, T_arg3>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor4 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6965,7 +6111,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_return
 inline bound_const_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) const volatile)
 { return bound_const_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor4 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -6979,11 +6124,7 @@ inline bound_const_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3
 mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4) const volatile)
 { return bound_const_volatile_mem_functor4<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor5 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -6994,7 +6135,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_const_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) const volatile)
 { return bound_const_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor5 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -7008,11 +6148,7 @@ inline bound_const_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3
 mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5) const volatile)
 { return bound_const_volatile_mem_functor5<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor6 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -7023,7 +6159,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_const_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) const volatile)
 { return bound_const_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor6 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -7037,11 +6172,7 @@ inline bound_const_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3
 mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6) const volatile)
 { return bound_const_volatile_mem_functor6<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>(_A_obj, _A_func); }
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor7 which encapsulates a method and an object instance.
- *
- * @deprecated Please use the version that takes the object by reference instead.
- *
  * @param _A_obj Pointer to object instance the functor should operate on.
  * @param _A_func Pointer to method that should be wrapped.
  * @return Functor that executes @e _A_func on invokation.
@@ -7052,7 +6183,6 @@ template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, 
 inline bound_const_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>
 mem_fun(/*const*/ T_obj* _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7) const volatile)
 { return bound_const_volatile_mem_functor7<T_return, T_obj, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>(_A_obj, _A_func); }
-#endif //SIGCXX_DISABLE_DEPRECATED
 
 /** Creates a functor of type sigc::bound_const_volatile_mem_functor7 which encapsulates a method and an object instance.
  * @param _A_obj Reference to object instance the functor should operate on.
@@ -7068,4 +6198,4 @@ mem_fun(/*const*/ T_obj& _A_obj, T_return (T_obj2::*_A_func)(T_arg1, T_arg2, T_a
 
 
 } /* namespace sigc */
-#endif /* _SIGC_FUNCTORS_MEM_FUN_H_ */
+#endif /* _SIGC_FUNCTORS_MACROS_MEM_FUNHM4_ */

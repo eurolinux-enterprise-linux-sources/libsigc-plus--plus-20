@@ -20,7 +20,7 @@ include(template.macros.m4)
 define([FUNCTOR_PTR_FUN],[dnl
 template <LIST(LOOP(class T_arg%1, $1), class T_return)> class pointer_functor$1;
 template <LIST(LOOP(class T_arg%1, $1), class T_return)>
-struct functor_trait<T_return (*)(LOOP(T_arg%1, $1)), false, false>
+struct functor_trait<T_return (*)(LOOP(T_arg%1, $1)), false>
 {
   typedef T_return result_type;
   typedef pointer_functor$1<LIST(LOOP(T_arg%1, $1), T_return)> functor_type;
@@ -28,39 +28,29 @@ struct functor_trait<T_return (*)(LOOP(T_arg%1, $1)), false, false>
 
 ])
 define([FUNCTOR_MEM_FUN],[dnl
-template <LIST(class T_return, class T_obj, LOOP(class T_arg%1, $1))> class mem_functor$1;
-template <LIST(class T_return, class T_obj, LOOP(class T_arg%1, $1))> class const_mem_functor$1;
+template <LIST(LOOP(class T_arg%1, $1), class T_return, class T_obj)> class mem_functor$1;
+template <LIST(LOOP(class T_arg%1, $1), class T_return, class T_obj)> class const_mem_functor$1;
 template <LIST(LOOP(class T_arg%1, $1), class T_return, class T_obj)>
-struct functor_trait<T_return (T_obj::*)(LOOP(T_arg%1, $1)), false, false>
+struct functor_trait<T_return (T_obj::*)(LOOP(T_arg%1, $1)), false>
 {
   typedef T_return result_type;
-  typedef mem_functor$1<LIST(T_return, T_obj, LOOP(T_arg%1, $1))> functor_type;
+  typedef mem_functor$1<LIST(LOOP(T_arg%1, $1), T_return, T_obj)> functor_type;
 };
 template <LIST(LOOP(class T_arg%1, $1), class T_return, class T_obj)>
-struct functor_trait<T_return (T_obj::*)(LOOP(T_arg%1, $1)) const, false, false>
+struct functor_trait<T_return (T_obj::*)(LOOP(T_arg%1, $1)) const, false>
 {
   typedef T_return result_type;
-  typedef const_mem_functor$1<LIST(T_return, T_obj, LOOP(T_arg%1, $1))> functor_type;
+  typedef const_mem_functor$1<LIST(LOOP(T_arg%1, $1), T_return, T_obj)> functor_type;
 };
 
 ])
 
 divert(0)dnl
-_FIREWALL([FUNCTORS_FUNCTOR_TRAIT])
+__FIREWALL__
 #include <sigc++/type_traits.h>
-#include <type_traits>
+
 
 namespace sigc {
-
-//TODO: When we can break ABI, replace nil by something else, such as sigc_nil.
-// nil is a keyword in Objective C++. When gcc is used for compiling Objective C++
-// programs, nil is defined as a preprocessor macro.
-// https://bugzilla.gnome.org/show_bug.cgi?id=695235
-#if defined(nil) && defined(SIGC_PRAGMA_PUSH_POP_MACRO)
-  #define SIGC_NIL_HAS_BEEN_PUSHED 1
-  #pragma push_macro("nil")
-  #undef nil
-#endif
 
 /** nil struct type.
  * The nil struct type is used as default template argument in the
@@ -69,16 +59,8 @@ namespace sigc {
  * @ingroup signal
  * @ingroup slot
  */
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 struct nil;
-#else
-struct nil {};
-#endif
 
-#ifdef SIGC_NIL_HAS_BEEN_PUSHED
-  #undef SIGC_NIL_HAS_BEEN_PUSHED
-  #pragma pop_macro("nil")
-#endif
 
 /** @defgroup sigcfunctors Functors
  * Functors are copyable types that define operator()().
@@ -106,19 +88,24 @@ struct nil {};
  *   <tt>typedef T_return result_type;</tt> in the class definition.
  * - Use the macro SIGC_FUNCTOR_TRAIT(T_functor,T_return) in namespace sigc.
  *   Multi-type functors are only partly supported.
- * - For functors not derived from sigc::functor_base, and not specified with
- *   SIGC_FUNCTOR_TRAIT(), libsigc++ tries to deduce the result type with the
- *   C++11 decltype() specifier. That attempt usually succeeds if the functor
- *   has a single operator()(), but it fails if operator()() is overloaded.
  * - Use the macro #SIGC_FUNCTORS_HAVE_RESULT_TYPE, if you want libsigc++ to assume
  *   that result_type is defined in all user-defined or third party functors,
- *   whose result type can't be deduced in any other way.
+ *   except those for which you specify a return type explicitly with SIGC_FUNCTOR_TRAIT().
+ * - Use the macro #SIGC_FUNCTORS_DEDUCE_RESULT_TYPE_WITH_DECLTYPE, if your
+ *   compiler makes it possible. Functors with overloaded operator()() are not
+ *   supported.
  *
- * If all these ways to deduce the result type fail, void is assumed.
- *
- * With libsigc++ versions before 2.6, the macro 
- * #SIGC_FUNCTORS_DEDUCE_RESULT_TYPE_WITH_DECLTYPE activated the test with
- * decltype(). That macro is now unneccesary and deprecated.
+ * The last alterative makes it possible to construct a slot from a C++11 lambda
+ * expression with any return type. Example:
+ * @code
+ * namespace sigc {
+ *   SIGC_FUNCTORS_DEDUCE_RESULT_TYPE_WITH_DECLTYPE
+ * }
+ * sigc::slot<bool, int> slot1 = [[]](int n)-> bool
+ *                               {
+ *                                 return n == 42;
+ *                               };
+ * @endcode
  */
 
 /** A hint to the compiler.
@@ -128,74 +115,28 @@ struct nil {};
  */
 struct functor_base {};
 
-/** Helper class, to determine if decltype() can deduce the result type of a functor.
- *
- * @ingroup sigcfunctors
- */
-template <typename T_functor>
-class can_deduce_result_type_with_decltype
-{
-private:
-  struct biggerthanint
-  {
-    int memory1;
-    int memory2;
-    int memory3;
-    int memory4;
-  };
-
-  static biggerthanint checksize(...);
-
-  // If decltype(&X_functor::operator()) can't be evaluated, this checksize() overload
-  // is ignored because of the SFINAE rule (Substitution Failure Is Not An Error).
-  template <typename X_functor>
-  static int checksize(X_functor* obj, decltype(&X_functor::operator()) p = nullptr);
-
-public:
-  static const bool value
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-    = sizeof(checksize(static_cast<T_functor*>(nullptr))) == sizeof(int)
-#endif
-    ;
-};
-
-
 /** Trait that specifies the return type of any type.
  * Template specializations for functors derived from sigc::functor_base,
- * for other functors whose result type can be deduced with decltype(),
  * for function pointers and for class methods are provided.
  *
  * @tparam T_functor Functor type.
  * @tparam I_derives_functor_base Whether @p T_functor inherits from sigc::functor_base.
- * @tparam I_can_use_decltype Whether the result type of @p T_functor can be deduced
- *                            with decltype().
  *
  * @ingroup sigcfunctors
  */
-template <class T_functor,
-          bool I_derives_functor_base = std::is_base_of<functor_base,T_functor>::value,
-          bool I_can_use_decltype = can_deduce_result_type_with_decltype<T_functor>::value>
+template <class T_functor, bool I_derives_functor_base=is_base_and_derived<functor_base,T_functor>::value>
 struct functor_trait
 {
   typedef void result_type;
   typedef T_functor functor_type;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-template <class T_functor, bool I_can_use_decltype>
-struct functor_trait<T_functor, true, I_can_use_decltype>
+template <class T_functor>
+struct functor_trait<T_functor,true>
 {
   typedef typename T_functor::result_type result_type;
   typedef T_functor functor_type;
 };
-
-template <typename T_functor>
-struct functor_trait<T_functor, false, true>
-{
-  typedef typename functor_trait<decltype(&T_functor::operator()), false, false>::result_type result_type;
-  typedef T_functor functor_type;
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
 
 /** Helper macro, if you want to mix user-defined and third party functors with libsigc++.
  *
@@ -205,11 +146,14 @@ struct functor_trait<T_functor, false, true>
  * namespace sigc { SIGC_FUNCTORS_HAVE_RESULT_TYPE }
  * @endcode
  *
+ * You can't use both SIGC_FUNCTORS_HAVE_RESULT_TYPE and
+ * SIGC_FUNCTORS_DEDUCE_RESULT_TYPE_WITH_DECLTYPE in the same compilation unit.
+ *
  * @ingroup sigcfunctors
  */
 #define SIGC_FUNCTORS_HAVE_RESULT_TYPE                 \
 template <class T_functor>                             \
-struct functor_trait<T_functor, false, false>          \
+struct functor_trait<T_functor,false>                  \
 {                                                      \
   typedef typename T_functor::result_type result_type; \
   typedef T_functor functor_type;                      \
@@ -232,19 +176,12 @@ struct functor_trait<T_functor, false, false>          \
  */
 #define SIGC_FUNCTOR_TRAIT(T_functor,T_return) \
 template <>                                    \
-struct functor_trait<T_functor, false, false>  \
-{                                              \
-  typedef T_return result_type;                \
-  typedef T_functor functor_type;              \
-};                                             \
-template <>                                    \
-struct functor_trait<T_functor, false, true>   \
+struct functor_trait<T_functor,false>          \
 {                                              \
   typedef T_return result_type;                \
   typedef T_functor functor_type;              \
 };
 
-#ifndef SIGCXX_DISABLE_DEPRECATED
 /** Helper macro, if you want to mix user-defined and third party functors with libsigc++.
  *
  * If you want to mix functors not derived from sigc::functor_base with libsigc++,
@@ -256,22 +193,23 @@ struct functor_trait<T_functor, false, true>   \
  * }
  * @endcode
  *
- * Functors with overloaded operator()() are not supported.
- *
  * @newin{2,2,11}
  *
- * @deprecated This macro does nothing. The test it activated in libsigc++
- *             versions before 2.6, is now unconditionally activated.
+ * You can't use both SIGC_FUNCTORS_HAVE_RESULT_TYPE and
+ * SIGC_FUNCTORS_DEDUCE_RESULT_TYPE_WITH_DECLTYPE in the same compilation unit.
  *
  * @ingroup sigcfunctors
  */
-#define SIGC_FUNCTORS_DEDUCE_RESULT_TYPE_WITH_DECLTYPE // Empty
-#endif // SIGCXX_DISABLE_DEPRECATED
+#define SIGC_FUNCTORS_DEDUCE_RESULT_TYPE_WITH_DECLTYPE \
+template <typename T_functor>          \
+struct functor_trait<T_functor, false> \
+{                                      \
+  typedef typename functor_trait<decltype(&T_functor::operator()), false>::result_type result_type; \
+  typedef T_functor functor_type;      \
+};
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 // detect the return type and the functor version of non-functor types.
 FOR(0,CALL_SIZE,[[FUNCTOR_PTR_FUN(%1)]])
 FOR(0,CALL_SIZE,[[FUNCTOR_MEM_FUN(%1)]])
-#endif // DOXYGEN_SHOULD_SKIP_THIS
 
 } /* namespace sigc */

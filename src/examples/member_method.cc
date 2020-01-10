@@ -9,6 +9,10 @@
 
 #include <sigc++/sigc++.h>
 
+SIGC_USING_STD(cout)
+SIGC_USING_STD(endl)
+SIGC_USING_STD(string)
+
 class Something : public sigc::trackable
 {
 public:
@@ -25,7 +29,7 @@ protected:
 
 Something::Something()
 {
-  auto iter = signal_print.connect( sigc::mem_fun(*this, &Something::on_print) );
+  type_signal_print::iterator iter = signal_print.connect( sigc::mem_fun(this, &Something::on_print) );
 
   signal_print.emit(2);
 

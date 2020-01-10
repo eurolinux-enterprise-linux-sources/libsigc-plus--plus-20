@@ -30,7 +30,7 @@ struct signal_emit$1
 {
   typedef signal_emit$1<LIST(T_return, LOOP(T_arg%1, $1), T_accumulator)> self_type;
   typedef typename T_accumulator::result_type result_type;
-  typedef slot<T_return(LIST(LOOP(T_arg%1, $1)))> slot_type;
+  typedef slot<LIST(T_return, LOOP(T_arg%1, $1))> slot_type;
   typedef internal::slot_iterator_buf<self_type, T_return> slot_iterator_buf_type;
   typedef internal::slot_reverse_iterator_buf<self_type, T_return> slot_reverse_iterator_buf_type;
   typedef signal_impl::const_iterator_type iterator_type;
@@ -41,7 +41,7 @@ ifelse($1,0,,[dnl
    * the values on to some slot.
    */
 ])dnl
-  signal_emit$1(LOOP(type_trait_take_t<T_arg%1> _A_a%1, $1)) ifelse($1,0,,[
+  signal_emit$1(LOOP(typename type_trait<T_arg%1>::take _A_a%1, $1)) ifelse($1,0,,[
     : LOOP(_A_a%1_(_A_a%1), $1)]) {}
 
 ifelse($1,0,[dnl
@@ -62,7 +62,7 @@ FOR(1, $1,[
    * @param _A_a%1 Argument to be passed on to the slots.])
    * @return The accumulated return values of the slot invocations as processed by the accumulator.
    */
-  static result_type emit(LIST(signal_impl* impl, LOOP(type_trait_take_t<T_arg%1> _A_a%1, $1)))
+  static result_type emit(LIST(signal_impl* impl, LOOP(typename type_trait<T_arg%1>::take _A_a%1, $1)))
     {
       T_accumulator accumulator;
 
@@ -77,17 +77,14 @@ FOR(1, $1,[
                          slot_iterator_buf_type(slots.end(), &self));
     }
 
-_DEPRECATE_IFDEF_START
   /** Executes a list of slots using an accumulator of type @e T_accumulator in reverse order.dnl
 ifelse($1,0,,[
    * The arguments are buffered in a temporary instance of signal_emit$1.])
 FOR(1, $1,[
    * @param _A_a%1 Argument to be passed on to the slots.])
    * @return The accumulated return values of the slot invocations as processed by the accumulator.
-   *
-   * @deprecated This is apparently not useful, but please let us know if you need it.
    */
-  static result_type emit_reverse(LIST(signal_impl* impl, LOOP(type_trait_take_t<T_arg%1> _A_a%1, $1)))
+  static result_type emit_reverse(LIST(signal_impl* impl, LOOP(typename type_trait<T_arg%1>::take _A_a%1, $1)))
     {
       T_accumulator accumulator;
 
@@ -101,11 +98,9 @@ FOR(1, $1,[
       return accumulator(slot_reverse_iterator_buf_type(slots.end(), &self),
                          slot_reverse_iterator_buf_type(slots.begin(), &self));
     }
-_DEPRECATE_IFDEF_END
-
 dnl
   FOR(1, $1,[
-  type_trait_take_t<T_arg%1> _A_a%1_;])
+  typename type_trait<T_arg%1>::take _A_a%1_;])
 };
 
 /** Abstracts signal emission.
@@ -117,7 +112,7 @@ struct signal_emit$1<LIST(T_return, LOOP(T_arg%1, $1), nil)>
 {
   typedef signal_emit$1<LIST(T_return, LOOP(T_arg%1, $1), nil) > self_type;
   typedef T_return result_type;
-  typedef slot<T_return(LIST(LOOP(T_arg%1, $1)))> slot_type;
+  typedef slot<LIST(T_return, LOOP(T_arg%1, $1))> slot_type;
   typedef signal_impl::const_iterator_type iterator_type;
   typedef typename slot_type::call_type call_type;
 
@@ -131,7 +126,7 @@ FOR(1, $1,[
    * @param _A_a%1 Argument to be passed on to the slots.])
    * @return The return value of the last slot invoked.
    */
-  static result_type emit(LIST(signal_impl* impl, LOOP(type_trait_take_t<T_arg%1> _A_a%1, $1)))
+  static result_type emit(LIST(signal_impl* impl, LOOP(typename type_trait<T_arg%1>::take _A_a%1, $1)))
     {
       if (!impl || impl->slots_.empty())
         return T_return();
@@ -143,7 +138,7 @@ FOR(1, $1,[
       //This avoids a leak on MSVC++ - see http://bugzilla.gnome.org/show_bug.cgi?id=306249
       { 
         temp_slot_list slots(impl->slots_);
-        auto it = slots.begin();
+        iterator_type it = slots.begin();
         for (; it != slots.end(); ++it)
           if (!it->empty() && !it->blocked()) break;
           
@@ -162,7 +157,6 @@ FOR(1, $1,[
       return r_;
     }
 
-_DEPRECATE_IFDEF_START
   /** Executes a list of slots using an accumulator of type @e T_accumulator in reverse order.dnl
 ifelse($1,0,,[
    * The arguments are passed directly on to the slots.])
@@ -172,10 +166,8 @@ ifelse($1,0,,[
 FOR(1, $1,[
    * @param _A_a%1 Argument to be passed on to the slots.])
    * @return The return value of the last slot invoked.
-   *
-   * @deprecated This is apparently not useful, but please let us know if you need it.
    */
-  static result_type emit_reverse(LIST(signal_impl* impl, LOOP(type_trait_take_t<T_arg%1> _A_a%1, $1)))
+  static result_type emit_reverse(LIST(signal_impl* impl, LOOP(typename type_trait<T_arg%1>::take _A_a%1, $1)))
     {
       if (!impl || impl->slots_.empty())
         return T_return();
@@ -212,7 +204,6 @@ FOR(1, $1,[
       
       return r_;
     }
-_DEPRECATE_IFDEF_END
 };
 
 /** Abstracts signal emission.
@@ -225,7 +216,7 @@ struct signal_emit$1<LIST(void, LOOP(T_arg%1, $1), nil)>
 {
   typedef signal_emit$1<LIST(void, LOOP(T_arg%1, $1), nil)> self_type;
   typedef void result_type;
-  typedef slot<void(LIST(LOOP(T_arg%1, $1)))> slot_type;
+  typedef slot<LIST(void, LOOP(T_arg%1, $1))> slot_type;
   typedef signal_impl::const_iterator_type iterator_type;
   typedef ifelse($1,0,void (*call_type)(slot_rep*),typename slot_type::call_type call_type);
 
@@ -237,21 +228,20 @@ ifelse($1,0,,[
 FOR(1, $1,[
    * @param _A_a%1 Argument to be passed on to the slots.])
    */
-  static result_type emit(LIST(signal_impl* impl, LOOP(type_trait_take_t<T_arg%1> _A_a%1, $1)))
+  static result_type emit(LIST(signal_impl* impl, LOOP(typename type_trait<T_arg%1>::take _A_a%1, $1)))
     {
       if (!impl || impl->slots_.empty()) return;
       signal_exec exec(impl);
       temp_slot_list slots(impl->slots_);
 
-      for (const auto& slot : slots)
+      for (iterator_type it = slots.begin(); it != slots.end(); ++it)
         {
-          if (slot.empty() || slot.blocked())
+          if (it->empty() || it->blocked())
             continue;
-          (reinterpret_cast<call_type>(slot.rep_->call_))(LIST(slot.rep_, LOOP(_A_a%1, $1)));
+          (reinterpret_cast<call_type>(it->rep_->call_))(LIST(it->rep_, LOOP(_A_a%1, $1)));
         }
     }
 
-_DEPRECATE_IFDEF_START
   /** Executes a list of slots using an accumulator of type @e T_accumulator in reverse order.dnl
 ifelse($1,0,,[
    * The arguments are passed directly on to the slots.])
@@ -259,10 +249,8 @@ ifelse($1,0,,[
    * @param last An iterator pointing to the last slot in the list.dnl
 FOR(1, $1,[
    * @param _A_a%1 Argument to be passed on to the slots.])
-   *
-   * @deprecated This is apparently not useful, but please let us know if you need it.
    */
-  static result_type emit_reverse(LIST(signal_impl* impl, LOOP(type_trait_take_t<T_arg%1> _A_a%1, $1)))
+  static result_type emit_reverse(LIST(signal_impl* impl, LOOP(typename type_trait<T_arg%1>::take _A_a%1, $1)))
     {
       if (!impl || impl->slots_.empty()) return;
       signal_exec exec(impl);
@@ -274,14 +262,13 @@ FOR(1, $1,[
       typedef std::reverse_iterator<signal_impl::iterator_type, std::random_access_iterator_tag,
                                      slot_base, slot_base&, slot_base*, std::ptrdiff_t> reverse_iterator_type;
 #endif
-      for (auto it = reverse_iterator_type(slots.end()); it != reverse_iterator_type(slots.begin()); ++it)
+      for (reverse_iterator_type it = reverse_iterator_type(slots.end()); it != reverse_iterator_type(slots.begin()); ++it)
         {
           if (it->empty() || it->blocked())
             continue;
           (reinterpret_cast<call_type>(it->rep_->call_))(LIST(it->rep_, LOOP(_A_a%1, $1)));
         }
     }
-_DEPRECATE_IFDEF_END
 };
 
 ])
@@ -298,7 +285,11 @@ define([SIGNAL_N],[dnl
  * Be careful if you directly pass one signal into the connect()
  * method of another: a shallow copy of the signal is made and
  * the signal's slots are not disconnected until both the signal
- * and its clone are destroyed, which is probably not what you want.
+ * and its clone are destroyed, which is probably not what you want!
+ *
+ * An STL-style list interface for the signal's list of slots
+ * can be retrieved with slots(). This interface supports
+ * iteration, insertion and removal of slots.
  *
  * The following template arguments are used:
  * - @e T_return The desired return type for the emit() function (may be overridden by the accumulator).dnl
@@ -319,7 +310,7 @@ class signal$1
 public:
   typedef internal::signal_emit$1<LIST(T_return, LOOP(T_arg%1, $1), T_accumulator)> emitter_type;
   typedef typename emitter_type::result_type         result_type;
-  typedef slot<T_return(LIST(LOOP(T_arg%1, $1)))>    slot_type;
+  typedef slot<LIST(T_return, LOOP(T_arg%1, $1))>    slot_type;
   typedef slot_list<slot_type>                       slot_list_type;
   typedef typename slot_list_type::iterator               iterator;
   typedef typename slot_list_type::const_iterator         const_iterator;
@@ -328,35 +319,17 @@ public:
 
   /** Add a slot to the list of slots.
    * Any functor or slot may be passed into connect().
-   * It will be converted into a slot implicitly.
+   * It will be converted into a slot implicitely.
    * The returned iterator may be stored for disconnection
    * of the slot at some later point. It stays valid until
    * the slot is removed from the list of slots. The iterator
-   * can also be implicitly converted into a sigc::connection object
+   * can also be implicitely converted into a sigc::connection object
    * that may be used safely beyond the life time of the slot.
-   *
-   * std::function<> and C++11 lambda expressions are functors.
-   * These are examples of functors that can be connected to a signal.
-   *
-   * %std::bind() creates a functor, but this functor typically has an
-   * %operator()() which is a variadic template.
-   * Our functor_trait can't deduce the result type
-   * of such a functor. If you first assign the return value of %std::bind()
-   * to a std::function, you can connect the std::function to a signal.
-   *
    * @param slot_ The slot to add to the list of slots.
    * @return An iterator pointing to the new slot in the list.
    */
   iterator connect(const slot_type& slot_)
     { return iterator(signal_base::connect(static_cast<const slot_base&>(slot_))); }
-
-  /** Add a slot to the list of slots.
-   * @see connect(const slot_type& slot_).
-   *
-   * @newin{2,8}
-   */
-  iterator connect(slot_type&& slot_)
-    { return iterator(signal_base::connect(std::move(static_cast<slot_base&>(slot_)))); }
 
   /** Triggers the emission of the signal.
    * During signal emission all slots that have been connected
@@ -369,23 +342,15 @@ FOR(1, $1,[
    * @param _A_a%1 Argument to be passed on to the slots.])
    * @return The accumulated return values of the slot invocations.
    */
-  result_type emit(LOOP(type_trait_take_t<T_arg%1> _A_a%1, $1)) const
+  result_type emit(LOOP(typename type_trait<T_arg%1>::take _A_a%1, $1)) const
     { return emitter_type::emit(LIST(impl_, LOOP(_A_a%1, $1))); }
 
-_DEPRECATE_IFDEF_START
-  /** Triggers the emission of the signal in reverse order (see emit()).
-   *
-   * @deprecated This is apparently not useful, but please let us know if you need it.
-   */
-  result_type emit_reverse(LOOP(type_trait_take_t<T_arg%1> _A_a%1, $1)) const
+  /** Triggers the emission of the signal in reverse order (see emit()). */
+  result_type emit_reverse(LOOP(typename type_trait<T_arg%1>::take _A_a%1, $1)) const
     { return emitter_type::emit_reverse(LIST(impl_, LOOP(_A_a%1, $1))); }
-_DEPRECATE_IFDEF_END
 
-  /** Triggers the emission of the signal (see emit()).
-   *
-   * @deprecated This is apparently not useful, but let us know if you need it.
-   */
-  result_type operator()(LOOP(type_trait_take_t<T_arg%1> _A_a%1, $1)) const
+  /** Triggers the emission of the signal (see emit()). */
+  result_type operator()(LOOP(typename type_trait<T_arg%1>::take _A_a%1, $1)) const
     { return emit(LOOP(_A_a%1, $1)); }
 
   /** Creates a functor that calls emit() on this signal.
@@ -395,15 +360,12 @@ _DEPRECATE_IFDEF_END
    * yields the same result.
    * @return A functor that calls emit() on this signal.
    */
-  bound_const_mem_functor$1<LIST(result_type, signal$1, LOOP(type_trait_take_t<T_arg%1>, $1))> make_slot() const
-    { return bound_const_mem_functor$1<LIST(result_type, signal$1, LOOP(type_trait_take_t<T_arg%1>, $1))>(*this, &signal$1::emit); }
+  bound_const_mem_functor$1<LIST(result_type, signal$1, LOOP(typename type_trait<T_arg%1>::take, $1))> make_slot() const
+    { return bound_const_mem_functor$1<LIST(result_type, signal$1, LOOP(typename type_trait<T_arg%1>::take, $1))>(this, &signal$1::emit); }
 
-_DEPRECATE_IFDEF_START
   /** Creates an STL-style interface for the signal's list of slots.
    * This interface supports iteration, insertion and removal of slots.
    * @return An STL-style interface for the signal's list of slots.
-   *
-   * @deprecated This is apparently not useful, but please let us know if you need it.
    */
   slot_list_type slots()
     { return slot_list_type(impl()); }
@@ -411,32 +373,14 @@ _DEPRECATE_IFDEF_START
   /** Creates an STL-style interface for the signal's list of slots.
    * This interface supports iteration, insertion and removal of slots.
    * @return An STL-style interface for the signal's list of slots.
-   *
-   * @deprecated This is apparently not useful, but please let us know if you need it.
    */
   const slot_list_type slots() const
     { return slot_list_type(const_cast<signal$1*>(this)->impl()); }
-_DEPRECATE_IFDEF_END
 
   signal$1() {}
 
   signal$1(const signal$1& src)
     : signal_base(src) {}
-
-  signal$1(signal$1&& src)
-    : signal_base(std::move(src)) {}
-
-  signal$1& operator=(const signal$1& src)
-  {
-    signal_base::operator=(src);
-    return *this;
-  }
-
-  signal$1& operator=(signal$1&& src)
-  {
-    signal_base::operator=(std::move(src));
-    return *this;
-  }
 };
 
 ])
@@ -456,6 +400,10 @@ ifelse($1, $2,[dnl
  * the signal's slots are not disconnected until both the signal
  * and its clone are destroyed, which is probably not what you want!
  *
+ * An STL-style list interface for the signal's list of slots
+ * can be retrieved with slots(). This interface supports
+ * iteration, insertion and removal of slots.
+ *
  * The template arguments determine the function signature of
  * the emit() function:
  * - @e T_return The desired return type of the emit() function.dnl
@@ -472,32 +420,21 @@ FOR(1,$1,[
  * sig.emit(19);
  * @endcode
  *
- * @deprecated Please use the syntax similar to that used by std::function<>:
- * @code
- * sigc::slot<void(bool, int)> some_slot;
- * @endcode
- *
  * @ingroup signal
  */
-template <LIST(class T_return, LOOP(class T_arg%1 = nil, $1))>
-class signal],[dnl
+template <LIST(class T_return, LOOP(class T_arg%1 = nil, $1))>],[dnl
 
 /** Convenience wrapper for the numbered sigc::signal$1 template.
  * See the base class for useful methods.
  * This is the template specialization of the unnumbered sigc::signal
  * template for $1 argument(s).
- *
- * @deprecated Please use the syntax similar to that used by std::function<>:
- * @code
- * sigc::slot<void(bool, int)> some_slot;
- * @endcode
 ifelse($1, $2,[dnl
  *
  * @ingroup signal
 ])dnl
  */
-template <LIST(class T_return, LOOP(class T_arg%1, $1))>
-class signal ifelse($1, $2,,[<LIST(T_return, LOOP(T_arg%1,$1), LOOP(nil, CALL_SIZE - $1))>])])
+template <LIST(class T_return, LOOP(class T_arg%1, $1))>])
+class signal ifelse($1, $2,,[<LIST(T_return, LOOP(T_arg%1,$1), LOOP(nil, CALL_SIZE - $1))>])
   : public signal$1<LIST(T_return, LOOP(T_arg%1, $1),nil)>
 {
 public:
@@ -565,118 +502,9 @@ ifelse($1, $2,[dnl
   };
 
   signal() {}
-
   signal(const signal& src)
     : signal$1<LIST(T_return, LOOP(T_arg%1, $1),nil)>(src) {}
-
-  signal(signal&& src)
-    : signal$1<LIST(T_return, LOOP(T_arg%1, $1),nil)>(std::move(src)) {}
-
-  signal& operator=(const signal& src)
-  {
-    signal$1<LIST(T_return, LOOP(T_arg%1, $1),nil)>::operator=(src);
-    return *this;
-  }
-
-  signal& operator=(signal&& src)
-  {
-    signal$1<LIST(T_return, LOOP(T_arg%1, $1),nil)>::operator=(std::move(src));
-    return *this;
-  }
 };
-
-/**
- * This specialization allow use of the  sigc::signal<R(Args...)> syntax,
- */
-template <LIST(class T_return, LOOP(class T_arg%1, $1))>
-class signal<T_return(LIST(LOOP(T_arg%1, $1)))>
-  : public signal$1<LIST(T_return, LOOP(T_arg%1, $1),nil)>
-{
-public:
-ifelse($1, $2,[dnl
-  /** Convenience wrapper for the numbered sigc::signal# templates.
-   * Like sigc::signal but the additional template parameter @e T_accumulator
-   * defines the accumulator type that should be used.
-   *
-   * An accumulator is a functor that uses a pair of special iterators
-   * to step through a list of slots and calculate a return value
-   * from the results of the slot invokations. The iterators' operator*()
-   * executes the slot. The return value is buffered, so that in an expression
-   * like @code a = (*i) * (*i); @endcode the slot is executed only once.
-   * The accumulator must define its return value as @p result_type.
-   *
-   * @par Example 1:
-   * This accumulator calculates the arithmetic mean value:
-   * @code
-   * struct arithmetic_mean_accumulator
-   * {
-   *   typedef double result_type;
-   *   template<typename T_iterator>
-   *   result_type operator()(T_iterator first, T_iterator last) const
-   *   {
-   *     result_type value_ = 0;
-   *     int n_ = 0;
-   *     for (; first != last; ++first, ++n_)
-   *       value_ += *first;
-   *     return value_ / n_;
-   *   }
-   * };
-   * @endcode
-   *
-   * @par Example 2:
-   * This accumulator stops signal emission when a slot returns zero:
-   * @code
-   * struct interruptable_accumulator
-   * {
-   *   typedef bool result_type;
-   *   template<typename T_iterator>
-   *   result_type operator()(T_iterator first, T_iterator last) const
-   *   {
-   *     for (; first != last; ++first, ++n_)
-   *       if (!*first) return false;
-   *     return true;
-   *   }
-   * };
-   * @endcode
-   *
-   * @ingroup signal
-],[
-  /** Convenience wrapper for the numbered sigc::signal$1 template.
-   * Like sigc::signal but the additional template parameter @e T_accumulator
-   * defines the accumulator type that should be used.
-])dnl
-   */
-  template <class T_accumulator>
-  class accumulated
-    : public signal$1<LIST(T_return, LOOP(T_arg%1, $1), T_accumulator)>
-  {
-  public:
-    accumulated() {}
-    accumulated(const accumulated& src)
-      : signal$1<LIST(T_return, LOOP(T_arg%1, $1), T_accumulator)>(src) {}
-  };
-
-  signal() {}
-
-  signal(const signal& src)
-    : signal$1<LIST(T_return, LOOP(T_arg%1, $1),nil)>(src) {}
-
-  signal(signal&& src)
-    : signal$1<LIST(T_return, LOOP(T_arg%1, $1),nil)>(std::move(src)) {}
-
-  signal& operator=(const signal& src)
-  {
-    signal$1<LIST(T_return, LOOP(T_arg%1, $1),nil)>::operator=(src);
-    return *this;
-  }
-
-  signal& operator=(signal&& src)
-  {
-    signal$1<LIST(T_return, LOOP(T_arg%1, $1),nil)>::operator=(std::move(src));
-    return *this;
-  }
-};
-
 
 ])
 
@@ -690,13 +518,6 @@ divert(0)
 #include <sigc++/trackable.h>
 #include <sigc++/functors/slot.h>
 #include <sigc++/functors/mem_fun.h>
-
-//TODO: See comment in functor_trait.h.
-#if defined(nil) && defined(SIGC_PRAGMA_PUSH_POP_MACRO)
-  #define SIGC_NIL_HAS_BEEN_PUSHED 1
-  #pragma push_macro("nil")
-  #undef nil
-#endif
 
 //SIGC_TYPEDEF_REDEFINE_ALLOWED:
 // TODO: This should have its own test, but I can not create one that gives the error instead of just a warning. murrayc.
@@ -845,7 +666,8 @@ struct slot_const_iterator
 /** STL-style list interface for sigc::signal#.
  * slot_list can be used to iterate over the list of slots that
  * is managed by a signal. Slots can be added or removed from
- * the list while existing iterators stay valid.
+ * the list while existing iterators stay valid. A slot_list
+ * object can be retrieved from the signal's slots() function.
  *
  * @ingroup signal
  */
@@ -872,8 +694,10 @@ struct slot_list
   #endif /* SIGC_HAVE_SUN_REVERSE_ITERATOR */
 
 
+
+
   slot_list()
-    : list_(nullptr) {}
+    : list_(0) {}
 
   explicit slot_list(internal::signal_impl* __list)
     : list_(__list) {}
@@ -917,20 +741,11 @@ struct slot_list
   iterator insert(iterator i, const slot_type& slot_)
     { return iterator(list_->insert(i.i_, static_cast<const slot_base&>(slot_))); }
 
-  iterator insert(iterator i, slot_type&& slot_)
-    { return iterator(list_->insert(i.i_, std::move(static_cast<slot_base&>(slot_)))); }
-
   void push_front(const slot_type& c)
     { insert(begin(), c); }
 
-  void push_front(slot_type&& c)
-    { insert(begin(), std::move(c)); }
-
   void push_back(const slot_type& c)
     { insert(end(), c); }
-
-  void push_back(slot_type&& c)
-    { insert(end(), std::move(c)); }
 
   iterator erase(iterator i)
     { return iterator(list_->erase(i.i_)); }
@@ -947,7 +762,7 @@ struct slot_list
 
   void pop_back()
     { 
-      auto tmp_ = end();
+      iterator tmp_ = end();
       erase(--tmp_);
     }
 
@@ -983,7 +798,7 @@ struct slot_iterator_buf
   typedef signal_impl::const_iterator_type iterator_type;
 
   slot_iterator_buf()
-    : c_(nullptr), invoked_(false) {}
+    : c_(0), invoked_(false) {}
 
   slot_iterator_buf(const iterator_type& i, const emitter_type* c)
     : i_(i), c_(c), invoked_(false) {}
@@ -1060,7 +875,7 @@ struct slot_iterator_buf<T_emitter, void>
   typedef signal_impl::const_iterator_type iterator_type;
 
   slot_iterator_buf()
-    : c_(nullptr), invoked_(false) {}
+    : c_(0), invoked_(false) {}
 
   slot_iterator_buf(const iterator_type& i, const emitter_type* c)
     : i_(i), c_(c), invoked_(false) {}
@@ -1137,14 +952,14 @@ struct slot_reverse_iterator_buf
   typedef signal_impl::const_iterator_type iterator_type;
 
   slot_reverse_iterator_buf()
-    : c_(nullptr), invoked_(false) {}
+    : c_(0), invoked_(false) {}
 
   slot_reverse_iterator_buf(const iterator_type& i, const emitter_type* c)
     : i_(i), c_(c), invoked_(false) {}
 
   result_type operator*() const
     {
-      auto __tmp(i_);
+      iterator_type __tmp(i_);
 	  --__tmp;
       if (!__tmp->empty() && !__tmp->blocked() && !invoked_)
         {
@@ -1216,14 +1031,14 @@ struct slot_reverse_iterator_buf<T_emitter, void>
   typedef signal_impl::const_iterator_type iterator_type;
 
   slot_reverse_iterator_buf()
-    : c_(nullptr), invoked_(false) {}
+    : c_(0), invoked_(false) {}
 
   slot_reverse_iterator_buf(const iterator_type& i, const emitter_type* c)
     : i_(i), c_(c), invoked_(false) {}
 
   void operator*() const
     {
-      auto __tmp(i_);
+      iterator_type __tmp(i_);
 	  --__tmp;
 	  if (!__tmp->empty() && !__tmp->blocked() && !invoked_)
         {
@@ -1283,10 +1098,5 @@ SIGNAL(CALL_SIZE,CALL_SIZE)
 FOR(0,eval(CALL_SIZE-1),[[SIGNAL(%1)]])
 
 } /* namespace sigc */
-
-#ifdef SIGC_NIL_HAS_BEEN_PUSHED
-  #undef SIGC_NIL_HAS_BEEN_PUSHED
-  #pragma pop_macro("nil")
-#endif
 
 #endif /* _SIGC_SIGNAL_H_ */

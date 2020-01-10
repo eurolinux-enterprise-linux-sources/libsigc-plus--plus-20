@@ -1,10 +1,10 @@
 // -*- c++ -*-
 /* Do not edit! -- generated file */
-#ifndef _SIGC_ADAPTORS_HIDE_H_
-#define _SIGC_ADAPTORS_HIDE_H_
+#ifndef _SIGC_ADAPTORS_MACROS_HIDEHM4_
+#define _SIGC_ADAPTORS_MACROS_HIDEHM4_
 #include <sigc++/adaptors/adaptor_trait.h>
 
-namespace sigc {
+namespace sigc { 
 
 /** @defgroup hide hide(), hide_return()
  * sigc::hide() alters an arbitrary functor in that it adds a parameter
@@ -49,6 +49,12 @@ namespace sigc {
  * sigc::hide_return() alters an arbitrary functor by
  * dropping its return value, thus converting it to a void functor.
  *
+ * For a more powerful version of this functionality see the lambda
+ * library adaptor sigc::group() which can bind, hide and reorder
+ * arguments arbitrarily. Although sigc::group() is more flexible,
+ * sigc::hide() provides a means of hiding parameters when the total
+ * number of parameters called is variable.
+ *
  * @ingroup adaptors
  */
 
@@ -63,11 +69,7 @@ namespace sigc {
  * @ingroup hide
  */
 template <int I_location, class T_functor>
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 struct hide_functor;
-#else
-struct hide_functor {};
-#endif
 
 /** Adaptor that adds a dummy parameter to the wrapped functor.
  * This template specialization ignores the value of the last parameter in operator()().
@@ -79,15 +81,13 @@ struct hide_functor <-1, T_functor> : public adapts<T_functor>
 {
   typedef typename adapts<T_functor>::adaptor_type adaptor_type;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
   template <class T_arg1=void, class T_arg2=void, class T_arg3=void, class T_arg4=void, class T_arg5=void, class T_arg6=void, class T_arg7=void>
   struct deduce_result_type
-    { typedef typename adaptor_type::template deduce_result_type<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>>::type type; };
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+    { typedef typename adaptor_type::template deduce_result_type<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass>::type type; };
   typedef typename adaptor_type::result_type  result_type;
 
   /** Invokes the wrapped functor ignoring the only argument.
-   * @param _A_a1 Argument to be ignored.
+   * @param _A_arg%1 Argument to be ignored.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1>
@@ -103,137 +103,137 @@ struct hide_functor <-1, T_functor> : public adapts<T_functor>
   #endif
 
   /** Invokes the wrapped functor, ignoring the last argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be ignored.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be ignored.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2>
   typename deduce_result_type<T_arg1, T_arg2>::type
   operator()(T_arg1 _A_a1, T_arg2)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass>
         (_A_a1); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2>
   typename deduce_result_type<T_arg1, T_arg2>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass>
         (_A_a1); }
   #endif
 
   /** Invokes the wrapped functor, ignoring the last argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be ignored.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be ignored.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass>
         (_A_a1, _A_a2); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass>
         (_A_a1, _A_a2); }
   #endif
 
   /** Invokes the wrapped functor, ignoring the last argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be ignored.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be ignored.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass>
         (_A_a1, _A_a2, _A_a3); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass>
         (_A_a1, _A_a2, _A_a3); }
   #endif
 
   /** Invokes the wrapped functor, ignoring the last argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be ignored.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be ignored.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass>
         (_A_a1, _A_a2, _A_a3, _A_a4); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass>
         (_A_a1, _A_a2, _A_a3, _A_a4); }
   #endif
 
   /** Invokes the wrapped functor, ignoring the last argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be passed on to the functor.
-   * @param _A_a6 Argument to be ignored.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be passed on to the functor.
+   * @param _A_arg6 Argument to be ignored.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass>
         (_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass>
         (_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
   #endif
 
   /** Invokes the wrapped functor, ignoring the last argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be passed on to the functor.
-   * @param _A_a6 Argument to be passed on to the functor.
-   * @param _A_a7 Argument to be ignored.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be passed on to the functor.
+   * @param _A_arg6 Argument to be passed on to the functor.
+   * @param _A_arg7 Argument to be ignored.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass>
         (_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass>
         (_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
   #endif
 
 
   /** Constructs a hide_functor object that adds a dummy parameter to the passed functor.
-   * @param _A_func Functor to invoke from operator()().
+   * @param _A_functor Functor to invoke from operator()().
    */
   explicit hide_functor(const T_functor& _A_func)
     : adapts<T_functor>(_A_func)
@@ -241,7 +241,7 @@ struct hide_functor <-1, T_functor> : public adapts<T_functor>
 };
 
 /** Adaptor that adds a dummy parameter to the wrapped functor.
- * This template specialization ignores the value of the 1st parameter in operator()().
+ * This template specialization ignores the value of the 0th parameter in operator()().
  *
  * @ingroup hide
  */
@@ -250,15 +250,13 @@ struct hide_functor <0, T_functor> : public adapts<T_functor>
 {
   typedef typename adapts<T_functor>::adaptor_type adaptor_type;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
   template <class T_arg1=void, class T_arg2=void, class T_arg3=void, class T_arg4=void, class T_arg5=void, class T_arg6=void, class T_arg7=void>
   struct deduce_result_type
-    { typedef typename adaptor_type::template deduce_result_type<type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>::type type; };
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+    { typedef typename adaptor_type::template deduce_result_type<typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>::type type; };
   typedef typename adaptor_type::result_type  result_type;
 
   /** Invokes the wrapped functor ignoring the only argument.
-   * @param _A_a1 Argument to be ignored.
+   * @param _A_arg%1 Argument to be ignored.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1>
@@ -273,147 +271,146 @@ struct hide_functor <0, T_functor> : public adapts<T_functor>
     { return this->functor_(); }
   #endif
 
-  /** Invokes the wrapped functor, ignoring the 1st argument.
-   * @param _A_a1 Argument to be ignored.
-   * @param _A_a2 Argument to be passed on to the functor.
+  /** Invokes the wrapped functor, ignoring the 1th argument.
+   * @param _A_arg1 Argument to be ignored.
+   * @param _A_arg2 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2>
   typename deduce_result_type<T_arg1, T_arg2>::type
   operator()(T_arg1, T_arg2 _A_a2)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg2>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg2>::pass>
         (_A_a2); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2>
   typename deduce_result_type<T_arg1, T_arg2>::type
   sun_forte_workaround(T_arg1, T_arg2 _A_a2)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg2>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg2>::pass>
         (_A_a2); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 1st argument.
-   * @param _A_a1 Argument to be ignored.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 1th argument.
+   * @param _A_arg1 Argument to be ignored.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3>::type
   operator()(T_arg1, T_arg2 _A_a2, T_arg3 _A_a3)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass>
         (_A_a2, _A_a3); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3>::type
   sun_forte_workaround(T_arg1, T_arg2 _A_a2, T_arg3 _A_a3)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass>
         (_A_a2, _A_a3); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 1st argument.
-   * @param _A_a1 Argument to be ignored.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 1th argument.
+   * @param _A_arg1 Argument to be ignored.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4>::type
   operator()(T_arg1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass>
         (_A_a2, _A_a3, _A_a4); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4>::type
   sun_forte_workaround(T_arg1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass>
         (_A_a2, _A_a3, _A_a4); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 1st argument.
-   * @param _A_a1 Argument to be ignored.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 1th argument.
+   * @param _A_arg1 Argument to be ignored.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
   operator()(T_arg1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass>
         (_A_a2, _A_a3, _A_a4, _A_a5); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
   sun_forte_workaround(T_arg1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass>
         (_A_a2, _A_a3, _A_a4, _A_a5); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 1st argument.
-   * @param _A_a1 Argument to be ignored.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be passed on to the functor.
-   * @param _A_a6 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 1th argument.
+   * @param _A_arg1 Argument to be ignored.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be passed on to the functor.
+   * @param _A_arg6 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
   operator()(T_arg1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass>
         (_A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
   sun_forte_workaround(T_arg1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass>
         (_A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 1st argument.
-   * @param _A_a1 Argument to be ignored.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be passed on to the functor.
-   * @param _A_a6 Argument to be passed on to the functor.
-   * @param _A_a7 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 1th argument.
+   * @param _A_arg1 Argument to be ignored.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be passed on to the functor.
+   * @param _A_arg6 Argument to be passed on to the functor.
+   * @param _A_arg7 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
   operator()(T_arg1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7 _A_a7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>
         (_A_a2, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
   sun_forte_workaround(T_arg1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7 _A_a7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>
         (_A_a2, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
   #endif
-
+    
 
   /** Constructs a hide_functor object that adds a dummy parameter to the passed functor.
-   * @param _A_func Functor to invoke from operator()().
+   * @param _A_functor Functor to invoke from operator()().
    */
   explicit hide_functor(const T_functor& _A_func)
     : adapts<T_functor>(_A_func)
     {}
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 /** Adaptor that adds a dummy parameter to the wrapped functor.
- * This template specialization ignores the value of the 2nd parameter in operator()().
+ * This template specialization ignores the value of the 1th parameter in operator()().
  *
  * @ingroup hide
  */
@@ -424,141 +421,141 @@ struct hide_functor <1, T_functor> : public adapts<T_functor>
 
   template <class T_arg1=void, class T_arg2=void, class T_arg3=void, class T_arg4=void, class T_arg5=void, class T_arg6=void, class T_arg7=void>
   struct deduce_result_type
-    { typedef typename adaptor_type::template deduce_result_type<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>::type type; };
+    { typedef typename adaptor_type::template deduce_result_type<typename type_trait<T_arg1>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>::type type; };
   typedef typename adaptor_type::result_type  result_type;
 
-  /** Invokes the wrapped functor, ignoring the 2nd argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be ignored.
+  /** Invokes the wrapped functor, ignoring the 2th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be ignored.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2>
   typename deduce_result_type<T_arg1, T_arg2>::type
   operator()(T_arg1 _A_a1, T_arg2)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass>
         (_A_a1); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2>
   typename deduce_result_type<T_arg1, T_arg2>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass>
         (_A_a1); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 2nd argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be ignored.
-   * @param _A_a3 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 2th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be ignored.
+   * @param _A_arg3 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3>::type
   operator()(T_arg1 _A_a1, T_arg2, T_arg3 _A_a3)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg3>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg3>::pass>
         (_A_a1, _A_a3); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2, T_arg3 _A_a3)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg3>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg3>::pass>
         (_A_a1, _A_a3); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 2nd argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be ignored.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 2th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be ignored.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4>::type
   operator()(T_arg1 _A_a1, T_arg2, T_arg3 _A_a3, T_arg4 _A_a4)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass>
         (_A_a1, _A_a3, _A_a4); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2, T_arg3 _A_a3, T_arg4 _A_a4)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass>
         (_A_a1, _A_a3, _A_a4); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 2nd argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be ignored.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 2th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be ignored.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
   operator()(T_arg1 _A_a1, T_arg2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass>
         (_A_a1, _A_a3, _A_a4, _A_a5); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass>
         (_A_a1, _A_a3, _A_a4, _A_a5); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 2nd argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be ignored.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be passed on to the functor.
-   * @param _A_a6 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 2th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be ignored.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be passed on to the functor.
+   * @param _A_arg6 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
   operator()(T_arg1 _A_a1, T_arg2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass>
         (_A_a1, _A_a3, _A_a4, _A_a5, _A_a6); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass>
         (_A_a1, _A_a3, _A_a4, _A_a5, _A_a6); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 2nd argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be ignored.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be passed on to the functor.
-   * @param _A_a6 Argument to be passed on to the functor.
-   * @param _A_a7 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 2th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be ignored.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be passed on to the functor.
+   * @param _A_arg6 Argument to be passed on to the functor.
+   * @param _A_arg7 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
   operator()(T_arg1 _A_a1, T_arg2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7 _A_a7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>
         (_A_a1, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7 _A_a7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>
         (_A_a1, _A_a3, _A_a4, _A_a5, _A_a6, _A_a7); }
   #endif
-
+    
 
   /** Constructs a hide_functor object that adds a dummy parameter to the passed functor.
-   * @param _A_func Functor to invoke from operator()().
+   * @param _A_functor Functor to invoke from operator()().
    */
   explicit hide_functor(const T_functor& _A_func)
     : adapts<T_functor>(_A_func)
@@ -566,7 +563,7 @@ struct hide_functor <1, T_functor> : public adapts<T_functor>
 };
 
 /** Adaptor that adds a dummy parameter to the wrapped functor.
- * This template specialization ignores the value of the 3rd parameter in operator()().
+ * This template specialization ignores the value of the 2th parameter in operator()().
  *
  * @ingroup hide
  */
@@ -577,122 +574,236 @@ struct hide_functor <2, T_functor> : public adapts<T_functor>
 
   template <class T_arg1=void, class T_arg2=void, class T_arg3=void, class T_arg4=void, class T_arg5=void, class T_arg6=void, class T_arg7=void>
   struct deduce_result_type
-    { typedef typename adaptor_type::template deduce_result_type<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>::type type; };
+    { typedef typename adaptor_type::template deduce_result_type<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>::type type; };
   typedef typename adaptor_type::result_type  result_type;
 
-  /** Invokes the wrapped functor, ignoring the 3rd argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be ignored.
+  /** Invokes the wrapped functor, ignoring the 3th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be ignored.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass>
         (_A_a1, _A_a2); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass>
         (_A_a1, _A_a2); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 3rd argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be ignored.
-   * @param _A_a4 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 3th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be ignored.
+   * @param _A_arg4 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3, T_arg4 _A_a4)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg4>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg4>::pass>
         (_A_a1, _A_a2, _A_a4); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3, T_arg4 _A_a4)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg4>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg4>::pass>
         (_A_a1, _A_a2, _A_a4); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 3rd argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be ignored.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 3th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be ignored.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3, T_arg4 _A_a4, T_arg5 _A_a5)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass>
         (_A_a1, _A_a2, _A_a4, _A_a5); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3, T_arg4 _A_a4, T_arg5 _A_a5)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass>
         (_A_a1, _A_a2, _A_a4, _A_a5); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 3rd argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be ignored.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be passed on to the functor.
-   * @param _A_a6 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 3th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be ignored.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be passed on to the functor.
+   * @param _A_arg6 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass>
         (_A_a1, _A_a2, _A_a4, _A_a5, _A_a6); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass>
         (_A_a1, _A_a2, _A_a4, _A_a5, _A_a6); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 3rd argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be ignored.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be passed on to the functor.
-   * @param _A_a6 Argument to be passed on to the functor.
-   * @param _A_a7 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 3th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be ignored.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be passed on to the functor.
+   * @param _A_arg6 Argument to be passed on to the functor.
+   * @param _A_arg7 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7 _A_a7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>
         (_A_a1, _A_a2, _A_a4, _A_a5, _A_a6, _A_a7); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7 _A_a7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>
         (_A_a1, _A_a2, _A_a4, _A_a5, _A_a6, _A_a7); }
   #endif
-
+    
 
   /** Constructs a hide_functor object that adds a dummy parameter to the passed functor.
-   * @param _A_func Functor to invoke from operator()().
+   * @param _A_functor Functor to invoke from operator()().
+   */
+  explicit hide_functor(const T_functor& _A_func)
+    : adapts<T_functor>(_A_func)
+    {}
+};
+
+/** Adaptor that adds a dummy parameter to the wrapped functor.
+ * This template specialization ignores the value of the 3th parameter in operator()().
+ *
+ * @ingroup hide
+ */
+template <class T_functor>
+struct hide_functor <3, T_functor> : public adapts<T_functor>
+{
+  typedef typename adapts<T_functor>::adaptor_type adaptor_type;
+
+  template <class T_arg1=void, class T_arg2=void, class T_arg3=void, class T_arg4=void, class T_arg5=void, class T_arg6=void, class T_arg7=void>
+  struct deduce_result_type
+    { typedef typename adaptor_type::template deduce_result_type<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>::type type; };
+  typedef typename adaptor_type::result_type  result_type;
+
+  /** Invokes the wrapped functor, ignoring the 4th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be ignored.
+   * @return The return value of the functor invocation.
+   */
+  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4>
+  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4>::type
+  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass>
+        (_A_a1, _A_a2, _A_a3); }
+
+  #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
+  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4>
+  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4>::type
+  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass>
+        (_A_a1, _A_a2, _A_a3); }
+  #endif
+    
+  /** Invokes the wrapped functor, ignoring the 4th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be ignored.
+   * @param _A_arg5 Argument to be passed on to the functor.
+   * @return The return value of the functor invocation.
+   */
+  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
+  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
+  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4, T_arg5 _A_a5)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg5>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a5); }
+
+  #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
+  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
+  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
+  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4, T_arg5 _A_a5)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg5>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a5); }
+  #endif
+    
+  /** Invokes the wrapped functor, ignoring the 4th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be ignored.
+   * @param _A_arg5 Argument to be passed on to the functor.
+   * @param _A_arg6 Argument to be passed on to the functor.
+   * @return The return value of the functor invocation.
+   */
+  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
+  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
+  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4, T_arg5 _A_a5, T_arg6 _A_a6)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a5, _A_a6); }
+
+  #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
+  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
+  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
+  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4, T_arg5 _A_a5, T_arg6 _A_a6)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a5, _A_a6); }
+  #endif
+    
+  /** Invokes the wrapped functor, ignoring the 4th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be ignored.
+   * @param _A_arg5 Argument to be passed on to the functor.
+   * @param _A_arg6 Argument to be passed on to the functor.
+   * @param _A_arg7 Argument to be passed on to the functor.
+   * @return The return value of the functor invocation.
+   */
+  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
+  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
+  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7 _A_a7)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a5, _A_a6, _A_a7); }
+
+  #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
+  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
+  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
+  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7 _A_a7)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a5, _A_a6, _A_a7); }
+  #endif
+    
+
+  /** Constructs a hide_functor object that adds a dummy parameter to the passed functor.
+   * @param _A_functor Functor to invoke from operator()().
    */
   explicit hide_functor(const T_functor& _A_func)
     : adapts<T_functor>(_A_func)
@@ -705,108 +816,87 @@ struct hide_functor <2, T_functor> : public adapts<T_functor>
  * @ingroup hide
  */
 template <class T_functor>
-struct hide_functor <3, T_functor> : public adapts<T_functor>
+struct hide_functor <4, T_functor> : public adapts<T_functor>
 {
   typedef typename adapts<T_functor>::adaptor_type adaptor_type;
 
   template <class T_arg1=void, class T_arg2=void, class T_arg3=void, class T_arg4=void, class T_arg5=void, class T_arg6=void, class T_arg7=void>
   struct deduce_result_type
-    { typedef typename adaptor_type::template deduce_result_type<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>::type type; };
+    { typedef typename adaptor_type::template deduce_result_type<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>::type type; };
   typedef typename adaptor_type::result_type  result_type;
 
-  /** Invokes the wrapped functor, ignoring the 4th argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be ignored.
-   * @return The return value of the functor invocation.
-   */
-  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4>
-  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4>::type
-  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>>
-        (_A_a1, _A_a2, _A_a3); }
-
-  #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
-  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4>
-  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4>::type
-  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>>
-        (_A_a1, _A_a2, _A_a3); }
-  #endif
-
-  /** Invokes the wrapped functor, ignoring the 4th argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be ignored.
-   * @param _A_a5 Argument to be passed on to the functor.
+  /** Invokes the wrapped functor, ignoring the 5th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be ignored.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
-  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4, T_arg5 _A_a5)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg5>>
-        (_A_a1, _A_a2, _A_a3, _A_a5); }
+  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a4); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
-  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4, T_arg5 _A_a5)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg5>>
-        (_A_a1, _A_a2, _A_a3, _A_a5); }
+  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a4); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 4th argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be ignored.
-   * @param _A_a5 Argument to be passed on to the functor.
-   * @param _A_a6 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 5th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be ignored.
+   * @param _A_arg6 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
-  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4, T_arg5 _A_a5, T_arg6 _A_a6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>>
-        (_A_a1, _A_a2, _A_a3, _A_a5, _A_a6); }
+  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5, T_arg6 _A_a6)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg6>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a6); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
-  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4, T_arg5 _A_a5, T_arg6 _A_a6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>>
-        (_A_a1, _A_a2, _A_a3, _A_a5, _A_a6); }
+  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5, T_arg6 _A_a6)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg6>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a6); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 4th argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be ignored.
-   * @param _A_a5 Argument to be passed on to the functor.
-   * @param _A_a6 Argument to be passed on to the functor.
-   * @param _A_a7 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 5th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be ignored.
+   * @param _A_arg6 Argument to be passed on to the functor.
+   * @param _A_arg7 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
-  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7 _A_a7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>
-        (_A_a1, _A_a2, _A_a3, _A_a5, _A_a6, _A_a7); }
+  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5, T_arg6 _A_a6, T_arg7 _A_a7)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a6, _A_a7); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
-  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7 _A_a7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>
-        (_A_a1, _A_a2, _A_a3, _A_a5, _A_a6, _A_a7); }
+  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5, T_arg6 _A_a6, T_arg7 _A_a7)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg6>::pass, typename type_trait<T_arg7>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a6, _A_a7); }
   #endif
-
+    
 
   /** Constructs a hide_functor object that adds a dummy parameter to the passed functor.
-   * @param _A_func Functor to invoke from operator()().
+   * @param _A_functor Functor to invoke from operator()().
    */
   explicit hide_functor(const T_functor& _A_func)
     : adapts<T_functor>(_A_func)
@@ -819,87 +909,65 @@ struct hide_functor <3, T_functor> : public adapts<T_functor>
  * @ingroup hide
  */
 template <class T_functor>
-struct hide_functor <4, T_functor> : public adapts<T_functor>
+struct hide_functor <5, T_functor> : public adapts<T_functor>
 {
   typedef typename adapts<T_functor>::adaptor_type adaptor_type;
 
   template <class T_arg1=void, class T_arg2=void, class T_arg3=void, class T_arg4=void, class T_arg5=void, class T_arg6=void, class T_arg7=void>
   struct deduce_result_type
-    { typedef typename adaptor_type::template deduce_result_type<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>::type type; };
+    { typedef typename adaptor_type::template deduce_result_type<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg7>::pass>::type type; };
   typedef typename adaptor_type::result_type  result_type;
 
-  /** Invokes the wrapped functor, ignoring the 5th argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be ignored.
-   * @return The return value of the functor invocation.
-   */
-  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
-  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
-  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>>
-        (_A_a1, _A_a2, _A_a3, _A_a4); }
-
-  #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
-  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5>
-  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5>::type
-  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>>
-        (_A_a1, _A_a2, _A_a3, _A_a4); }
-  #endif
-
-  /** Invokes the wrapped functor, ignoring the 5th argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be ignored.
-   * @param _A_a6 Argument to be passed on to the functor.
+  /** Invokes the wrapped functor, ignoring the 6th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be passed on to the functor.
+   * @param _A_arg6 Argument to be ignored.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
-  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5, T_arg6 _A_a6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg6>>
-        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a6); }
+  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
-  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5, T_arg6 _A_a6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg6>>
-        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a6); }
+  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
   #endif
-
-  /** Invokes the wrapped functor, ignoring the 5th argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be ignored.
-   * @param _A_a6 Argument to be passed on to the functor.
-   * @param _A_a7 Argument to be passed on to the functor.
+    
+  /** Invokes the wrapped functor, ignoring the 6th argument.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be passed on to the functor.
+   * @param _A_arg6 Argument to be ignored.
+   * @param _A_arg7 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
-  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5, T_arg6 _A_a6, T_arg7 _A_a7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>
-        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a6, _A_a7); }
+  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6, T_arg7 _A_a7)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg7>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a7); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
-  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5, T_arg6 _A_a6, T_arg7 _A_a7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg6>, type_trait_pass_t<T_arg7>>
-        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a6, _A_a7); }
+  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6, T_arg7 _A_a7)
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg7>::pass>
+        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a7); }
   #endif
-
+    
 
   /** Constructs a hide_functor object that adds a dummy parameter to the passed functor.
-   * @param _A_func Functor to invoke from operator()().
+   * @param _A_functor Functor to invoke from operator()().
    */
   explicit hide_functor(const T_functor& _A_func)
     : adapts<T_functor>(_A_func)
@@ -912,140 +980,63 @@ struct hide_functor <4, T_functor> : public adapts<T_functor>
  * @ingroup hide
  */
 template <class T_functor>
-struct hide_functor <5, T_functor> : public adapts<T_functor>
-{
-  typedef typename adapts<T_functor>::adaptor_type adaptor_type;
-
-  template <class T_arg1=void, class T_arg2=void, class T_arg3=void, class T_arg4=void, class T_arg5=void, class T_arg6=void, class T_arg7=void>
-  struct deduce_result_type
-    { typedef typename adaptor_type::template deduce_result_type<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg7>>::type type; };
-  typedef typename adaptor_type::result_type  result_type;
-
-  /** Invokes the wrapped functor, ignoring the 6th argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be passed on to the functor.
-   * @param _A_a6 Argument to be ignored.
-   * @return The return value of the functor invocation.
-   */
-  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
-  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
-  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>>
-        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
-
-  #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
-  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6>
-  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6>::type
-  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>>
-        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a5); }
-  #endif
-
-  /** Invokes the wrapped functor, ignoring the 6th argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be passed on to the functor.
-   * @param _A_a6 Argument to be ignored.
-   * @param _A_a7 Argument to be passed on to the functor.
-   * @return The return value of the functor invocation.
-   */
-  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
-  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
-  operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6, T_arg7 _A_a7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg7>>
-        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a7); }
-
-  #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
-  template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
-  typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
-  sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6, T_arg7 _A_a7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg7>>
-        (_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a7); }
-  #endif
-
-
-  /** Constructs a hide_functor object that adds a dummy parameter to the passed functor.
-   * @param _A_func Functor to invoke from operator()().
-   */
-  explicit hide_functor(const T_functor& _A_func)
-    : adapts<T_functor>(_A_func)
-    {}
-};
-
-/** Adaptor that adds a dummy parameter to the wrapped functor.
- * This template specialization ignores the value of the 7th parameter in operator()().
- *
- * @ingroup hide
- */
-template <class T_functor>
 struct hide_functor <6, T_functor> : public adapts<T_functor>
 {
   typedef typename adapts<T_functor>::adaptor_type adaptor_type;
 
   template <class T_arg1=void, class T_arg2=void, class T_arg3=void, class T_arg4=void, class T_arg5=void, class T_arg6=void, class T_arg7=void>
   struct deduce_result_type
-    { typedef typename adaptor_type::template deduce_result_type<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>>::type type; };
+    { typedef typename adaptor_type::template deduce_result_type<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass>::type type; };
   typedef typename adaptor_type::result_type  result_type;
 
   /** Invokes the wrapped functor, ignoring the 7th argument.
-   * @param _A_a1 Argument to be passed on to the functor.
-   * @param _A_a2 Argument to be passed on to the functor.
-   * @param _A_a3 Argument to be passed on to the functor.
-   * @param _A_a4 Argument to be passed on to the functor.
-   * @param _A_a5 Argument to be passed on to the functor.
-   * @param _A_a6 Argument to be passed on to the functor.
-   * @param _A_a7 Argument to be ignored.
+   * @param _A_arg1 Argument to be passed on to the functor.
+   * @param _A_arg2 Argument to be passed on to the functor.
+   * @param _A_arg3 Argument to be passed on to the functor.
+   * @param _A_arg4 Argument to be passed on to the functor.
+   * @param _A_arg5 Argument to be passed on to the functor.
+   * @param _A_arg6 Argument to be passed on to the functor.
+   * @param _A_arg7 Argument to be ignored.
    * @return The return value of the functor invocation.
    */
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
   operator()(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass>
         (_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
 
   #ifndef SIGC_TEMPLATE_SPECIALIZATION_OPERATOR_OVERLOAD
   template <class T_arg1, class T_arg2, class T_arg3, class T_arg4, class T_arg5, class T_arg6, class T_arg7>
   typename deduce_result_type<T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type
   sun_forte_workaround(T_arg1 _A_a1, T_arg2 _A_a2, T_arg3 _A_a3, T_arg4 _A_a4, T_arg5 _A_a5, T_arg6 _A_a6, T_arg7)
-    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<type_trait_pass_t<T_arg1>, type_trait_pass_t<T_arg2>, type_trait_pass_t<T_arg3>, type_trait_pass_t<T_arg4>, type_trait_pass_t<T_arg5>, type_trait_pass_t<T_arg6>>
+    { return this->functor_.SIGC_WORKAROUND_OPERATOR_PARENTHESES<typename type_trait<T_arg1>::pass, typename type_trait<T_arg2>::pass, typename type_trait<T_arg3>::pass, typename type_trait<T_arg4>::pass, typename type_trait<T_arg5>::pass, typename type_trait<T_arg6>::pass>
         (_A_a1, _A_a2, _A_a3, _A_a4, _A_a5, _A_a6); }
   #endif
-
+    
 
   /** Constructs a hide_functor object that adds a dummy parameter to the passed functor.
-   * @param _A_func Functor to invoke from operator()().
+   * @param _A_functor Functor to invoke from operator()().
    */
   explicit hide_functor(const T_functor& _A_func)
     : adapts<T_functor>(_A_func)
     {}
 };
-#endif // DOXYGEN_SHOULD_SKIP_THIS
 
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::hide_functor performs a functor on the
  * functor stored in the sigc::hide_functor object.
  *
  * @ingroup hide
  */
-template <int I_location, class T_functor>
-struct visitor<hide_functor<I_location, T_functor> >
+template <class T_action, int I_location, class T_functor>
+void visit_each(const T_action& _A_action,
+                const hide_functor<I_location, T_functor>& _A_target)
 {
-  template <typename T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const hide_functor<I_location, T_functor>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.functor_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  visit_each(_A_action, _A_target.functor_);
+}
+
 
 /** Creates an adaptor of type sigc::hide_functor which adds a dummy parameter to the passed functor.
  * The optional template argument @e I_location specifies the zero-based
@@ -1075,4 +1066,4 @@ hide(const T_functor& _A_func)
   { return hide_functor<-1, T_functor> (_A_func); }
 
 } /* namespace sigc */
-#endif /* _SIGC_ADAPTORS_HIDE_H_ */
+#endif /* _SIGC_ADAPTORS_MACROS_HIDEHM4_ */

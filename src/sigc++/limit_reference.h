@@ -2,14 +2,16 @@
 /* Do not edit! -- generated file */
 
 
-#ifndef _SIGC_LIMIT_REFERENCE_H_
-#define _SIGC_LIMIT_REFERENCE_H_
+#ifndef _SIGC_MACROS_LIMIT_REFERENCEHM4_
+#define _SIGC_MACROS_LIMIT_REFERENCEHM4_
 
-#include <sigc++/visit_each.h>
+
 #include <sigc++/type_traits.h>
 #include <sigc++/trackable.h>
 
+
 namespace sigc {
+
 
 /** A limit_reference<Foo> object stores a reference (Foo&), but make sure that,
  * if Foo inherits from sigc::trackable, then visit_each<>() will "limit" itself to the
@@ -26,14 +28,14 @@ namespace sigc {
  * If Foo does not inherit from sigc::trackable then invoke() and visit() just return the
  * derived reference.
  *
- * This is used for bound (sigc::bind) slot parameters (via bound_argument), bound return values,
+ * This is used for bound (sigc::bind) slot parameters (via bound_argument), bound return values, 
  * and, with mem_fun(), the reference to the handling object.
  *
  * - @e T_type The type of the reference.
  */
 template <class T_type,
           bool I_derives_trackable =
-            std::is_base_of<trackable, T_type>::value>
+            is_base_and_derived<trackable, T_type>::value>
 class limit_reference
 {
 public:
@@ -103,26 +105,21 @@ private:
   T_type& invoked;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-/** Implementation of visitor specialized for the limit_reference
+/** Implementation of visit_each() specialized for the limit_reference
  * class, to call visit_each() on the entity returned by the limit_reference's
  * visit() method.
- * @tparam T_type The type of the reference.
- * @tparam T_action The type of functor to invoke.
+ * - @e T_action The type of functor to invoke.
+ * - @e T_type The type of the reference.
  * @param _A_action The functor to invoke.
- * @param _A_target The visited instance.
+ * @param _A_argument The visited instance.
  */
-template <class T_type, bool I_derives_trackable>
-struct visitor<limit_reference<T_type, I_derives_trackable> >
+template <class T_action, class T_type, bool I_derives_trackable>
+void
+visit_each(const T_action& _A_action,
+           const limit_reference<T_type, I_derives_trackable>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const limit_reference<T_type, I_derives_trackable>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.visit());
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  visit_each(_A_action, _A_target.visit());
+}
 
 
 /** A const_limit_reference<Foo> object stores a reference (Foo&), but make sure that,
@@ -140,14 +137,14 @@ struct visitor<limit_reference<T_type, I_derives_trackable> >
  * If Foo does not inherit from sigc::trackable then invoke() and visit() just return the
  * derived reference.
  *
- * This is used for bound (sigc::bind) slot parameters (via bound_argument), bound return values,
+ * This is used for bound (sigc::bind) slot parameters (via bound_argument), bound return values, 
  * and, with mem_fun(), the reference to the handling object.
  *
  * - @e T_type The type of the reference.
  */
 template <class T_type,
           bool I_derives_trackable =
-            std::is_base_of<trackable, T_type>::value>
+            is_base_and_derived<trackable, T_type>::value>
 class const_limit_reference
 {
 public:
@@ -217,26 +214,21 @@ private:
   const T_type& invoked;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-/** Implementation of visitor specialized for the const_limit_reference
+/** Implementation of visit_each() specialized for the const_limit_reference
  * class, to call visit_each() on the entity returned by the const_limit_reference's
  * visit() method.
- * @tparam T_type The type of the reference.
- * @tparam T_action The type of functor to invoke.
+ * - @e T_action The type of functor to invoke.
+ * - @e T_type The type of the reference.
  * @param _A_action The functor to invoke.
- * @param _A_target The visited instance.
+ * @param _A_argument The visited instance.
  */
-template <class T_type, bool I_derives_trackable>
-struct visitor<const_limit_reference<T_type, I_derives_trackable> >
+template <class T_action, class T_type, bool I_derives_trackable>
+void
+visit_each(const T_action& _A_action,
+           const const_limit_reference<T_type, I_derives_trackable>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const const_limit_reference<T_type, I_derives_trackable>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.visit());
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  visit_each(_A_action, _A_target.visit());
+}
 
 
 /** A volatile_limit_reference<Foo> object stores a reference (Foo&), but make sure that,
@@ -254,14 +246,14 @@ struct visitor<const_limit_reference<T_type, I_derives_trackable> >
  * If Foo does not inherit from sigc::trackable then invoke() and visit() just return the
  * derived reference.
  *
- * This is used for bound (sigc::bind) slot parameters (via bound_argument), bound return values,
+ * This is used for bound (sigc::bind) slot parameters (via bound_argument), bound return values, 
  * and, with mem_fun(), the reference to the handling object.
  *
  * - @e T_type The type of the reference.
  */
 template <class T_type,
           bool I_derives_trackable =
-            std::is_base_of<trackable, T_type>::value>
+            is_base_and_derived<trackable, T_type>::value>
 class volatile_limit_reference
 {
 public:
@@ -331,26 +323,21 @@ private:
   T_type& invoked;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-/** Implementation of visitor specialized for the volatile_limit_reference
+/** Implementation of visit_each() specialized for the volatile_limit_reference
  * class, to call visit_each() on the entity returned by the volatile_limit_reference's
  * visit() method.
- * @tparam T_type The type of the reference.
- * @tparam T_action The type of functor to invoke.
+ * - @e T_action The type of functor to invoke.
+ * - @e T_type The type of the reference.
  * @param _A_action The functor to invoke.
- * @param _A_target The visited instance.
+ * @param _A_argument The visited instance.
  */
-template <class T_type, bool I_derives_trackable>
-struct visitor<volatile_limit_reference<T_type, I_derives_trackable> >
+template <class T_action, class T_type, bool I_derives_trackable>
+void
+visit_each(const T_action& _A_action,
+           const volatile_limit_reference<T_type, I_derives_trackable>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const volatile_limit_reference<T_type, I_derives_trackable>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.visit());
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  visit_each(_A_action, _A_target.visit());
+}
 
 
 /** A const_volatile_limit_reference<Foo> object stores a reference (Foo&), but make sure that,
@@ -368,14 +355,14 @@ struct visitor<volatile_limit_reference<T_type, I_derives_trackable> >
  * If Foo does not inherit from sigc::trackable then invoke() and visit() just return the
  * derived reference.
  *
- * This is used for bound (sigc::bind) slot parameters (via bound_argument), bound return values,
+ * This is used for bound (sigc::bind) slot parameters (via bound_argument), bound return values, 
  * and, with mem_fun(), the reference to the handling object.
  *
  * - @e T_type The type of the reference.
  */
 template <class T_type,
           bool I_derives_trackable =
-            std::is_base_of<trackable, T_type>::value>
+            is_base_and_derived<trackable, T_type>::value>
 class const_volatile_limit_reference
 {
 public:
@@ -445,27 +432,24 @@ private:
   const T_type& invoked;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-/** Implementation of visitor specialized for the const_volatile_limit_reference
+/** Implementation of visit_each() specialized for the const_volatile_limit_reference
  * class, to call visit_each() on the entity returned by the const_volatile_limit_reference's
  * visit() method.
- * @tparam T_type The type of the reference.
- * @tparam T_action The type of functor to invoke.
+ * - @e T_action The type of functor to invoke.
+ * - @e T_type The type of the reference.
  * @param _A_action The functor to invoke.
- * @param _A_target The visited instance.
+ * @param _A_argument The visited instance.
  */
-template <class T_type, bool I_derives_trackable>
-struct visitor<const_volatile_limit_reference<T_type, I_derives_trackable> >
+template <class T_action, class T_type, bool I_derives_trackable>
+void
+visit_each(const T_action& _A_action,
+           const const_volatile_limit_reference<T_type, I_derives_trackable>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const const_volatile_limit_reference<T_type, I_derives_trackable>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.visit());
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  visit_each(_A_action, _A_target.visit());
+}
+
 
 } /* namespace sigc */
 
-#endif /* _SIGC_LIMIT_REFERENCE_H_ */
+
+#endif /* _SIGC_MACROS_LIMIT_REFERENCEHM4_ */

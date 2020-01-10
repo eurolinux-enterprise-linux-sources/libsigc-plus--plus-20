@@ -1,7 +1,7 @@
 // -*- c++ -*-
 /* Do not edit! -- generated file */
-#ifndef _SIGC_ADAPTORS_ADAPTOR_TRAIT_H_
-#define _SIGC_ADAPTORS_ADAPTOR_TRAIT_H_
+#ifndef _SIGC_ADAPTORS_MACROS_ADAPTOR_TRAITHM4_
+#define _SIGC_ADAPTORS_MACROS_ADAPTOR_TRAITHM4_
 #include <sigc++config.h> //To get SIGC_TEMPLATE_KEYWORD_OPERATOR_OVERLOAD
 #include <sigc++/visit_each.h>
 #include <sigc++/functors/functor_trait.h>
@@ -26,9 +26,7 @@ namespace sigc {
 #endif
 
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 template <class T_functor> struct adapts;
-#endif
 
 /** @defgroup adaptors Adaptors
  * Adaptors are functors that alter the signature of a functor's
@@ -36,14 +34,13 @@ template <class T_functor> struct adapts;
  *
  * The adaptor types libsigc++ provides
  * are created with bind(), bind_return(), hide(), hide_return(),
- * retype_return(), retype(), compose(), exception_catch(), track_obj()
- * and group().
+ * retype_return(), retype(), compose(), exception_catch() and group().
  *
  * You can easily derive your own adaptor type from sigc::adapts.
  */
 
 /** Converts an arbitrary functor into an adaptor type.
- * All adaptor types in libsigc++ have
+ * All adaptor tyes in libsigc++ are unnumbered and have
  * a <tt>template operator()</tt> member of every argument count
  * they support. These functions in turn invoke a stored adaptor's
  * <tt>template operator()</tt>, processing the arguments and return
@@ -61,11 +58,9 @@ template <class T_functor> struct adapts;
 template <class T_functor>
 struct adaptor_functor : public adaptor_base
 {
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
   template <class T_arg1=void, class T_arg2=void, class T_arg3=void, class T_arg4=void, class T_arg5=void, class T_arg6=void, class T_arg7=void>
   struct deduce_result_type
-    { typedef sigc::deduce_result_t<T_functor, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7> type; };
-#endif
+    { typedef typename sigc::deduce_result_type<T_functor, T_arg1, T_arg2, T_arg3, T_arg4, T_arg5, T_arg6, T_arg7>::type type; };
   typedef typename functor_trait<T_functor>::result_type result_type;
 
   /** Invokes the wrapped functor passing on the arguments.
@@ -78,7 +73,7 @@ struct adaptor_functor : public adaptor_base
   result_type sun_forte_workaround() const
     { return operator(); }
   #endif
-
+  
   /** Invokes the wrapped functor passing on the arguments.
    * @param _A_arg1 Argument to be passed on to the functor.
    * @return The return value of the functor invocation.
@@ -96,7 +91,7 @@ struct adaptor_functor : public adaptor_base
       return functor_(_A_arg1);
     }
   #endif
-
+  
   /** Invokes the wrapped functor passing on the arguments.
    * @param _A_arg1 Argument to be passed on to the functor.
    * @param _A_arg2 Argument to be passed on to the functor.
@@ -115,7 +110,7 @@ struct adaptor_functor : public adaptor_base
       return functor_(_A_arg1, _A_arg2);
     }
   #endif
-
+  
   /** Invokes the wrapped functor passing on the arguments.
    * @param _A_arg1 Argument to be passed on to the functor.
    * @param _A_arg2 Argument to be passed on to the functor.
@@ -135,7 +130,7 @@ struct adaptor_functor : public adaptor_base
       return functor_(_A_arg1, _A_arg2, _A_arg3);
     }
   #endif
-
+  
   /** Invokes the wrapped functor passing on the arguments.
    * @param _A_arg1 Argument to be passed on to the functor.
    * @param _A_arg2 Argument to be passed on to the functor.
@@ -156,7 +151,7 @@ struct adaptor_functor : public adaptor_base
       return functor_(_A_arg1, _A_arg2, _A_arg3, _A_arg4);
     }
   #endif
-
+  
   /** Invokes the wrapped functor passing on the arguments.
    * @param _A_arg1 Argument to be passed on to the functor.
    * @param _A_arg2 Argument to be passed on to the functor.
@@ -178,7 +173,7 @@ struct adaptor_functor : public adaptor_base
       return functor_(_A_arg1, _A_arg2, _A_arg3, _A_arg4, _A_arg5);
     }
   #endif
-
+  
   /** Invokes the wrapped functor passing on the arguments.
    * @param _A_arg1 Argument to be passed on to the functor.
    * @param _A_arg2 Argument to be passed on to the functor.
@@ -201,7 +196,7 @@ struct adaptor_functor : public adaptor_base
       return functor_(_A_arg1, _A_arg2, _A_arg3, _A_arg4, _A_arg5, _A_arg6);
     }
   #endif
-
+  
   /** Invokes the wrapped functor passing on the arguments.
    * @param _A_arg1 Argument to be passed on to the functor.
    * @param _A_arg2 Argument to be passed on to the functor.
@@ -225,7 +220,7 @@ struct adaptor_functor : public adaptor_base
       return functor_(_A_arg1, _A_arg2, _A_arg3, _A_arg4, _A_arg5, _A_arg6, _A_arg7);
     }
   #endif
-
+  
   /// Constructs an invalid functor.
   adaptor_functor()
     {}
@@ -255,25 +250,23 @@ typename adaptor_functor<T_functor>::result_type
 adaptor_functor<T_functor>::operator()() const
   { return functor_(); }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-//template specialization of visitor<>::do_visit_each<>(action, functor):
+
+//template specialization of visit_each<>(action, functor):
 /** Performs a functor on each of the targets of a functor.
  * The function overload for sigc::adaptor_functor performs a functor
  * on the functor stored in the sigc::adaptor_functor object.
  *
  * @ingroup adaptors
  */
-template <class T_functor>
-struct visitor<adaptor_functor<T_functor> >
+template <class T_action, class T_functor>
+void visit_each(const T_action& _A_action,
+                const adaptor_functor<T_functor>& _A_target)
 {
-  template <class T_action>
-  static void do_visit_each(const T_action& _A_action,
-                            const adaptor_functor<T_functor>& _A_target)
-  {
-    sigc::visit_each(_A_action, _A_target.functor_);
-  }
-};
-#endif // DOXYGEN_SHOULD_SKIP_THIS
+  //The extra sigc:: prefix avoids ambiguity in some strange
+  //situations.
+  sigc::visit_each(_A_action, _A_target.functor_);
+}
+
 
 /** Trait that specifies what is the adaptor version of a functor type.
  * Template specializations for sigc::adaptor_base derived functors,
@@ -284,17 +277,13 @@ struct visitor<adaptor_functor<T_functor> >
  *
  * @ingroup adaptors
  */
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-template <class T_functor, bool I_isadaptor = std::is_base_of<adaptor_base, T_functor>::value> struct adaptor_trait;
-#else
-template <class T_functor, bool I_isadaptor = std::is_base_of<adaptor_base, T_functor>::value> struct adaptor_trait {};
-#endif
+template <class T_functor, bool I_isadaptor = is_base_and_derived<adaptor_base, T_functor>::value> struct adaptor_trait;
 
 /** Trait that specifies what is the adaptor version of a functor type.
  * This template specialization is used for types that inherit from adaptor_base.
  * adaptor_type is equal to @p T_functor in this case.
  */
-template <class T_functor>
+template <class T_functor> 
 struct adaptor_trait<T_functor, true>
 {
   typedef typename T_functor::result_type result_type;
@@ -316,69 +305,58 @@ struct adaptor_trait<T_functor, false>
   typedef adaptor_functor<functor_type> adaptor_type;
 };
 
-// Doxygen (at least version 1.8.4) removes blank lines in a code block.
-// That's why there are empty comment lines in the following code block.
+
 /** Base type for adaptors.
- * sigc::adapts wraps adaptors, functors, function pointers and class methods.
+ * adapts wraps adaptors, functors, function pointers and class methods.
  * It contains a single member functor which is always a sigc::adaptor_base.
  * The typedef adaptor_type defines the exact type that is used
  * to store the adaptor, functor, function pointer or class method passed
- * into the constructor. It differs from @a T_functor unless @a T_functor
+ * into the constructor. It differs from @e T_functor unless @e T_functor
  * inherits from sigc::adaptor_base.
  *
  * @par Example of a simple adaptor:
  * @code
- * namespace my_ns
- * {
  * template <class T_functor>
  * struct my_adaptor : public sigc::adapts<T_functor>
  * {
  *   template <class T_arg1=void, class T_arg2=void>
  *   struct deduce_result_type
- *   { typedef sigc::deduce_result_t<T_functor, T_arg1, T_arg2> type; };
+ *   { typedef typename sigc::deduce_result_type<T_functor, T_arg1, T_arg2>::type type; };
  *   typedef typename sigc::functor_trait<T_functor>::result_type result_type;
- *   //
+ *
  *   result_type
  *   operator()() const;
- *   //
+ *
  *   template <class T_arg1>
  *   typename deduce_result_type<T_arg1>::type
  *   operator()(T_arg1 _A_arg1) const;
- *   //
+ *
  *   template <class T_arg1, class T_arg2>
  *   typename deduce_result_type<T_arg1, T_arg2>::type
- *   operator()(T_arg1 _A_arg1, T_arg2 _A_arg2) const;
- *   //
+ *   operator()(T_arg1 _A_arg1, class T_arg2) const;
+ *
  *   // Constructs a my_adaptor object that wraps the passed functor.
  *   // Initializes adapts<T_functor>::functor_, which is invoked from operator()().
  *   explicit my_adaptor(const T_functor& _A_functor)
  *     : sigc::adapts<T_functor>(_A_functor) {}
  * };
- * } // end namespace my_ns
- * //
- * // Specialization of sigc::visitor for my_adaptor.
- * namespace sigc
+ *
+ * template <class T_action, class T_functor>
+ * void visit_each(const T_action& _A_action,
+ *                 const my_adaptor<T_functor>& _A_target)
  * {
- * template <class T_functor>
- * struct visitor<my_ns::my_adaptor<T_functor> >
- * {
- *   template <class T_action>
- *   static void do_visit_each(const T_action& _A_action,
- *                             const my_ns::my_adaptor<T_functor>& _A_target)
- *   {
- *     sigc::visit_each(_A_action, _A_target.functor_);
- *   }
- * };
- * } // end namespace sigc
+ *   visit_each(_A_action, _A_target.functor_);
+ * }
  * @endcode
  *
  * If you implement your own adaptor, you must also provide your specialization
- * of sigc::visitor<>::do_visit_each<>() that will forward the call to the functor(s)
- * your adapter is wrapping. Otherwise, pointers stored within the functor won't be
+ * of visit_each<>() that will forward the call to the functor(s) your
+ * adapter is wrapping. Otherwise, pointers stored within the functor won't be
  * invalidated when a sigc::trackable object is destroyed and you can end up
  * executing callbacks on destroyed objects.
  *
- * Your specialization of sigc::visitor<> must be in namespace sigc.
+ * Your adaptor and your specialization of visit_each<>() must be in the same
+ * namespace.
  *
  * @ingroup adaptors
  */
@@ -400,4 +378,4 @@ struct adapts : public adaptor_base
 };
 
 } /* namespace sigc */
-#endif /* _SIGC_ADAPTORS_ADAPTOR_TRAIT_H_ */
+#endif /* _SIGC_ADAPTORS_MACROS_ADAPTOR_TRAITHM4_ */

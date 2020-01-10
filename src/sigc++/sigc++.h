@@ -31,11 +31,11 @@
  * dissimilar callbacks.
  *
  * For instance, see the @ref signal "Signals", @ref sigcfunctors "Functors", 
- * @ref slot "Slots" and @ref adaptors "Adaptors".
+ * @ref slot "Slots", @ref adaptors "Adaptors", and @ref lambdas "Lambdas".
  *
  * See also the 
  * <a href="http://libsigc.sourceforge.net/libsigc2/docs/manual/html/index.html">libsigc++ tutorial</a>, 
- * the <a href="http://libsigc.sourceforge.net/">libsigc++ website</a>, and 
+ * the <a href="http://libsigc.sourceforge.net/">the libsigc++ website</a>, and 
  * the <a href="http://library.gnome.org/devel/gtkmm-tutorial/unstable/chapter-signals.html">Signals appendix of the Programming with gtkmm book</a>.
  *
  * @section features Features
@@ -50,7 +50,7 @@
  * - Extensions do not require alteration of basic components
  * - User-definable accumulators
  * - A variety of adaptors to change the callback signature: bind, hide,
- *   retype, and compose
+ *   retype, compose and lambda call groups
  *
  * @section basics Basic Usage
  *
@@ -65,40 +65,16 @@
  * g++ program.cc -o program `pkg-config --cflags --libs sigc++-2.0`
  * @endcode
  *
- * @subsection autotools Using Autotools
- *
  * Alternatively, if using autoconf, use the following in @c configure.ac:
  * @code
- * PKG_CHECK_MODULES([DEPS], [sigc++-2.0])
+ * PKG_CHECK_MODULES([LIBSIGC], [sigc++-2.0])
  * @endcode
- * Then use the generated @c DEPS_CFLAGS and @c DEPS_LIBS variables
+ * Then use the generated @c LIBSIGC_CFLAGS and @c LIBSIGC_LIBS variables
  * in the project @c Makefile.am files. For example:
  * @code
- * yourprogram_CPPFLAGS = $(DEPS_CFLAGS)
- * yourprogram_LDADD = $(DEPS_LIBS)
+ * program_CPPFLAGS = $(LIBSIGC_CFLAGS)
+ * program_LDADD = $(LIBSIGC_LIBS)
  * @endcode
- *
- * Your @c PKG_CHECK_MODULES() call should also mention any other libraries that
- * you need to use via pkg-config.
- *
- * @subsection cmake Using CMake
- *
- * If using CMake, use the following in @c CMakeList.txt:
- * @code
- * include(FindPkgConfig)
- * pkg_check_modules(DEPS REQUIRED sigc++-2.0)
- * include_directories(${DEPS_INCLUDE_DIRS})
- * target_link_libraries(yourprogram ${DEPS_LIBRARIES})
- * @endcode
- *
- * Your @c pkg_check_modules() call should also mention any other libraries that
- * you need to use via pkg-config.
- *
- * @section scope Scope of Documentation
- *
- * libsigc++ contains many template functions and template classes/structs,
- * some with many specializations. This reference manual does not show all
- * specializations of those templates that hardly any user will use directly.
  */
 
 #include <sigc++/signal.h>

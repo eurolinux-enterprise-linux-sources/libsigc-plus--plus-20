@@ -1,52 +1,47 @@
-#include "testutilities.h"
 #include <sigc++/sigc++.h>
-#include <sstream>
+#include <iostream>
 #include <algorithm>
 #include <functional>
-#include <cstdlib>
 
-namespace
-{
-std::ostringstream result_stream;
+#include <new>
+SIGC_USING_STD(new)
 
-int ident(int i)
+static int ident(int i)
 {
-  return i;
+    return i;
 }
 
 template<typename T>
 struct min_accum
 {
-  typedef T result_type;
+    typedef T result_type;
 
-  template<class I>
-#ifndef SIGC_HAVE_SUN_REVERSE_ITERATOR
-  typename std::iterator_traits<I>::value_type operator()(I i1, I i2)
+    template<class I>
+#ifndef SIGC_HAVE_SUN_REVERSE_ITERATOR  
+        typename std::iterator_traits<I>::value_type operator()(I i1, I i2)
 #else
-  typename I::value_type operator()(I i1, I i2)
-#endif
-  {
-    return *std::min_element(i1, i2);
-  }
+        typename I::value_type operator()(I i1, I i2)
+#endif  
+        {
+            return *std::min_element(i1, i2);
+        }
 };
 
-} // end anonymous namespace
-
-int main(int argc, char* argv[])
+int main()
 {
-  auto util = TestUtilities::get_instance();
+    sigc::signal0<int,min_accum<int> > signal;
 
-  if (!util->check_command_args(argc, argv))
-    return util->get_result_and_delete_instance() ? EXIT_SUCCESS : EXIT_FAILURE;
+    signal.connect(
+            sigc::bind(sigc::ptr_fun(ident), 3));
+    signal.connect(
+            sigc::bind(sigc::ptr_fun(ident), 1));
+    signal.connect(
+            sigc::bind(sigc::ptr_fun(ident), 42));
 
-  sigc::signal0<int,min_accum<int> > signal;
-
-  signal.connect(sigc::bind(sigc::ptr_fun(ident), 3));
-  signal.connect(sigc::bind(sigc::ptr_fun(ident), 1));
-  signal.connect(sigc::bind(sigc::ptr_fun(ident), 42));
-
-  result_stream << signal();
-  util->check_result(result_stream, "1");
-
-  return util->get_result_and_delete_instance() ? EXIT_SUCCESS : EXIT_FAILURE;
+    int rv = signal();
+    std::cout <<rv <<std::endl;
+    if (rv != 1)
+        return 1;
+    else
+        return 0;
 }

@@ -37,7 +37,7 @@ struct SIGC_API trackable_callback
 {
   void* data_;
   func_destroy_notify func_;
-  trackable_callback(void* data, func_destroy_notify func) noexcept
+  trackable_callback(void* data, func_destroy_notify func)
     : data_(data), func_(func) {}
 };
 
@@ -67,11 +67,6 @@ struct SIGC_API trackable_callback_list
 
   trackable_callback_list()
     : clearing_(false) {}
-
-  trackable_callback_list(const trackable_callback_list& src) = delete;
-  trackable_callback_list& operator=(const trackable_callback_list& src) = delete;
-  trackable_callback_list(trackable_callback_list&& src) = delete;
-  trackable_callback_list& operator=(trackable_callback_list&& src) = delete;
 
   /** This invokes all of the callback functions.
    */
@@ -108,20 +103,11 @@ private:
  */
 struct SIGC_API trackable
 {
-  // Concerning noexcept specifications:
-  // libsigc++ does not have complete control of what happens when notify_callbacks()
-  // is called. It may throw an exception. A method that calls notify_callbacks()
-  // shall not be declared noexcept.
+  trackable();
 
-  trackable() noexcept;
-
-  trackable(const trackable& src) noexcept;
-
-  trackable(trackable&& src);
+  trackable(const trackable& src);
 
   trackable& operator=(const trackable& src);
-
-  trackable& operator=(trackable&& src);
 
   ~trackable();
 
@@ -129,6 +115,7 @@ struct SIGC_API trackable
                                    who insist on using "trackable*" as
                                    pointer type for their own derived objects */
 
+  
   typedef internal::func_destroy_notify func_destroy_notify;
   
   /** Add a callback that is executed (notified) when the trackable object is detroyed.

@@ -19,18 +19,8 @@ include(template.macros.m4)
 divert(0)dnl
 #include <sigc++/adaptors/lambda/select.h>
 
-_DEPRECATE_IFDEF_START
-
 namespace sigc {
 
-// sigc::_1 .. sigc::_7 must be kept until we can break ABI.
-// See https://bugzilla.gnome.org/show_bug.cgi?id=755550
-// The extern declarations have been moved from select.h, to keep them out of the API.
-// Without them the const sigc::_1 .. sigc::_7 would be local to this .cc file.
-FOR(1,CALL_SIZE,[[extern SIGC_API const lambda<internal::lambda_select%1> _%1;
-]])
 FOR(1,CALL_SIZE,[[const lambda<internal::lambda_select%1> _%1;
 ]])
 } /* namespace sigc */
-
-_DEPRECATE_IFDEF_END
